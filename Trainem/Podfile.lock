@@ -1,0 +1,23 @@
+PODS:
+  - Bolts/Tasks (1.1.5)
+  - CocoaLumberjack (2.0.0):
+    - CocoaLumberjack/Default (= 2.0.0)
+    - CocoaLumberjack/Extensions (= 2.0.0)
+  - CocoaLumberjack/Core (2.0.0)
+  - CocoaLumberjack/Default (2.0.0):
+    - CocoaLumberjack/Core
+  - CocoaLumberjack/Extensions (2.0.0):
+    - CocoaLumberjack/Default
+  - Parse (1.7.4):
+    - Bolts/Tasks (>= 1.1.5)
+
+DEPENDENCIES:
+  - CocoaLumberjack
+  - Parse
+
+SPEC CHECKSUMS:
+  Bolts: aac24961496d504aa56fc267cde95162a71bac39
+  CocoaLumberjack: a6f77d987d65dc7ba86b0f84db7d0b9084f77bcb
+  Parse: 6ca512c6e860b66739c95151b2f76ac4712b7842
+
+COCOAPODS: 0.35.0
