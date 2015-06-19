@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="15A178w" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="yBw-WC-RPZ">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <scenes>
+        <!--Registration View Controller-->
+        <scene sceneID="mQP-rQ-vKR">
+            <objects>
+                <viewController id="yBw-WC-RPZ" customClass="RegistrationViewController" customModule="Trainem" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Hdq-7O-8Ly"/>
+                        <viewControllerLayoutGuide type="bottom" id="LyX-eI-BDb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="XGo-yh-yDc">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hLC-Xt-IGR">
+                                <rect key="frame" x="246" y="552" width="109" height="29"/>
+                                <animations/>
+                                <segments>
+                                    <segment title="Client"/>
+                                    <segment title="Coach"/>
+                                </segments>
+                            </segmentedControl>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mWi-gR-2M5" userLabel="Username TextFiled">
+                                <rect key="frame" x="150" y="102" width="300" height="30"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hhJ-mX-TXA" userLabel="Password TextField">
+                                <rect key="frame" x="150" y="149" width="300" height="30"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gt1-9D-xTJ">
+                                <rect key="frame" x="206" y="213" width="57" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Register">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8vw-cP-NRz">
+                                <rect key="frame" x="345" y="213" width="38" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Login">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="hLC-Xt-IGR" secondAttribute="centerX" id="2Qx-4N-o1c"/>
+                            <constraint firstItem="mWi-gR-2M5" firstAttribute="width" secondItem="XGo-yh-yDc" secondAttribute="width" multiplier="0.5" id="6Na-ee-Dtc"/>
+                            <constraint firstItem="mWi-gR-2M5" firstAttribute="top" secondItem="Hdq-7O-8Ly" secondAttribute="bottom" constant="82" id="9S4-Jx-VZn"/>
+                            <constraint firstItem="Gt1-9D-xTJ" firstAttribute="top" secondItem="hhJ-mX-TXA" secondAttribute="bottom" constant="34" id="Igv-58-1xn"/>
+                            <constraint firstItem="LyX-eI-BDb" firstAttribute="top" secondItem="hLC-Xt-IGR" secondAttribute="bottom" constant="20" id="KNZ-Rg-uGP"/>
+                            <constraint firstItem="8vw-cP-NRz" firstAttribute="top" secondItem="hhJ-mX-TXA" secondAttribute="bottom" constant="34" id="LiF-Sv-k75"/>
+                            <constraint firstItem="hhJ-mX-TXA" firstAttribute="centerX" secondItem="Gt1-9D-xTJ" secondAttribute="centerX" constant="65.5" id="Q39-A3-AGc"/>
+                            <constraint firstAttribute="centerX" secondItem="hhJ-mX-TXA" secondAttribute="centerX" constant="-0.5" id="kNc-zB-YYe"/>
+                            <constraint firstAttribute="centerX" secondItem="mWi-gR-2M5" secondAttribute="centerX" constant="-0.5" id="tfa-N5-4gq"/>
+                            <constraint firstItem="hhJ-mX-TXA" firstAttribute="top" secondItem="mWi-gR-2M5" secondAttribute="bottom" constant="17" id="xKT-PM-wU4"/>
+                            <constraint firstItem="hhJ-mX-TXA" firstAttribute="width" secondItem="mWi-gR-2M5" secondAttribute="width" id="xV3-ES-jnU"/>
+                            <constraint firstItem="8vw-cP-NRz" firstAttribute="centerX" secondItem="hhJ-mX-TXA" secondAttribute="centerX" constant="64" id="yhm-FO-ML1"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="loginButton" destination="8vw-cP-NRz" id="oYB-Bm-kwK"/>
+                        <outlet property="passwordTextField" destination="hhJ-mX-TXA" id="PGu-Fp-NGa"/>
+                        <outlet property="registerButton" destination="Gt1-9D-xTJ" id="UNm-oT-fk7"/>
+                        <outlet property="usernameTextField" destination="mWi-gR-2M5" id="BQl-Sq-saJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="E91-9x-LA6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="423" y="529"/>
+        </scene>
+    </scenes>
+</document>

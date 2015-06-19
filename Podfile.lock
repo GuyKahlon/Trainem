@@ -10,14 +10,23 @@ PODS:
     - CocoaLumberjack/Default
   - Parse (1.7.4):
     - Bolts/Tasks (>= 1.1.5)
+  - ReactiveCocoa (2.5):
+    - ReactiveCocoa/UI (= 2.5)
+  - ReactiveCocoa/Core (2.5):
+    - ReactiveCocoa/no-arc
+  - ReactiveCocoa/no-arc (2.5)
+  - ReactiveCocoa/UI (2.5):
+    - ReactiveCocoa/Core
 
 DEPENDENCIES:
   - CocoaLumberjack
   - Parse
+  - ReactiveCocoa (~> 2.5)
 
 SPEC CHECKSUMS:
   Bolts: aac24961496d504aa56fc267cde95162a71bac39
   CocoaLumberjack: a6f77d987d65dc7ba86b0f84db7d0b9084f77bcb
   Parse: 6ca512c6e860b66739c95151b2f76ac4712b7842
+  ReactiveCocoa: e2db045570aa97c695e7aa97c2bcab222ae51f4a
 
 COCOAPODS: 0.35.0

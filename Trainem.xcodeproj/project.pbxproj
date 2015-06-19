@@ -8,12 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		0E694777193E010F50CE36CA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABBD6228CDD0F5E3ED2AF420 /* libPods.a */; };
+		502D16BC1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 502D16BB1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.m */; };
+		5049D0381B26F71A00406466 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5049D0371B26F71A00406466 /* Login.storyboard */; };
+		5049D0391B26F71A00406466 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5049D0371B26F71A00406466 /* Login.storyboard */; };
+		5049D03F1B26F77C00406466 /* LoginAndRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5049D03E1B26F77C00406466 /* LoginAndRegistration.swift */; };
 		508CFFD11B1F703A006665F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508CFFD01B1F703A006665F7 /* AppDelegate.swift */; };
 		508CFFD31B1F703A006665F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508CFFD21B1F703A006665F7 /* ViewController.swift */; };
 		508CFFD61B1F703A006665F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 508CFFD41B1F703A006665F7 /* Main.storyboard */; };
 		508CFFD81B1F703A006665F7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 508CFFD71B1F703A006665F7 /* Images.xcassets */; };
 		508CFFDB1B1F703A006665F7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 508CFFD91B1F703A006665F7 /* LaunchScreen.xib */; };
 		508CFFE71B1F703A006665F7 /* TrainemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508CFFE61B1F703A006665F7 /* TrainemTests.swift */; };
+		50A02F171B3140D900FE641E /* ReactiveSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A02F161B3140D900FE641E /* ReactiveSwift.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,7 +33,12 @@
 
 /* Begin PBXFileReference section */
 		35EA3A31A339AC75A2A0B4B1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		5049D0361B26F65900406466 /* Trainem-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Trainem-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		5014EE051B27045D0055181E /* TrainemTest-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TrainemTest-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		5014EE061B27048E0055181E /* Trainem-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Trainem-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		502D16BA1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITextField+UITextField_RACKeyboardSupport.h"; path = "Trainem/Extensions/UITextField+UITextField_RACKeyboardSupport.h"; sourceTree = "<group>"; };
+		502D16BB1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITextField+UITextField_RACKeyboardSupport.m"; path = "Trainem/Extensions/UITextField+UITextField_RACKeyboardSupport.m"; sourceTree = "<group>"; };
+		5049D0371B26F71A00406466 /* Login.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Login.storyboard; path = "Login&Register/Login.storyboard"; sourceTree = "<group>"; };
+		5049D03E1B26F77C00406466 /* LoginAndRegistration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginAndRegistration.swift; path = "Login And Registration/LoginAndRegistration.swift"; sourceTree = "<group>"; };
 		508CFFCB1B1F703A006665F7 /* Trainem.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Trainem.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		508CFFCF1B1F703A006665F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		508CFFD01B1F703A006665F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -39,6 +49,7 @@
 		508CFFE01B1F703A006665F7 /* TrainemTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrainemTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		508CFFE51B1F703A006665F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		508CFFE61B1F703A006665F7 /* TrainemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainemTests.swift; sourceTree = "<group>"; };
+		50A02F161B3140D900FE641E /* ReactiveSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReactiveSwift.swift; path = Extensions/ReactiveSwift/ReactiveSwift.swift; sourceTree = "<group>"; };
 		6A2D55D2678ED4C5832633F3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		ABBD6228CDD0F5E3ED2AF420 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -71,9 +82,44 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		5049D03A1B26F72000406466 /* Login & Registration */ = {
+			isa = PBXGroup;
+			children = (
+				5049D0371B26F71A00406466 /* Login.storyboard */,
+				5049D03B1B26F73900406466 /* Model */,
+				5049D03C1B26F74000406466 /* View */,
+				5049D03D1B26F74800406466 /* Controller */,
+			);
+			name = "Login & Registration";
+			sourceTree = "<group>";
+		};
+		5049D03B1B26F73900406466 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		5049D03C1B26F74000406466 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		5049D03D1B26F74800406466 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				5049D03E1B26F77C00406466 /* LoginAndRegistration.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
 		508CFFC21B1F703A006665F7 = {
 			isa = PBXGroup;
 			children = (
+				502D16BA1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.h */,
+				502D16BB1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.m */,
 				508CFFCD1B1F703A006665F7 /* Trainem */,
 				508CFFE31B1F703A006665F7 /* TrainemTests */,
 				508CFFCC1B1F703A006665F7 /* Products */,
@@ -94,11 +140,12 @@
 		508CFFCD1B1F703A006665F7 /* Trainem */ = {
 			isa = PBXGroup;
 			children = (
+				5049D03A1B26F72000406466 /* Login & Registration */,
 				508CFFD01B1F703A006665F7 /* AppDelegate.swift */,
 				508CFFD21B1F703A006665F7 /* ViewController.swift */,
 				508CFFD41B1F703A006665F7 /* Main.storyboard */,
 				508CFFD71B1F703A006665F7 /* Images.xcassets */,
-				508CFFD91B1F703A006665F7 /* LaunchScreen.xib */,
+				50A02F141B31409900FE641E /* Extensions */,
 				508CFFCE1B1F703A006665F7 /* Supporting Files */,
 			);
 			path = Trainem;
@@ -107,7 +154,9 @@
 		508CFFCE1B1F703A006665F7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				5049D0361B26F65900406466 /* Trainem-Bridging-Header.h */,
+				5014EE061B27048E0055181E /* Trainem-Bridging-Header.h */,
+				5014EE051B27045D0055181E /* TrainemTest-Bridging-Header.h */,
+				508CFFD91B1F703A006665F7 /* LaunchScreen.xib */,
 				508CFFCF1B1F703A006665F7 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -128,6 +177,22 @@
 				508CFFE51B1F703A006665F7 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		50A02F141B31409900FE641E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				50A02F151B3140A500FE641E /* ReactivaCocoa */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		50A02F151B3140A500FE641E /* ReactivaCocoa */ = {
+			isa = PBXGroup;
+			children = (
+				50A02F161B3140D900FE641E /* ReactiveSwift.swift */,
+			);
+			name = ReactivaCocoa;
 			sourceTree = "<group>";
 		};
 		82C311B10C59E0653CA6903B /* Frameworks */ = {
@@ -184,7 +249,8 @@
 		508CFFC31B1F703A006665F7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = GuyKahlon;
 				TargetAttributes = {
 					508CFFCA1B1F703A006665F7 = {
@@ -220,6 +286,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5049D0381B26F71A00406466 /* Login.storyboard in Resources */,
 				508CFFD61B1F703A006665F7 /* Main.storyboard in Resources */,
 				508CFFDB1B1F703A006665F7 /* LaunchScreen.xib in Resources */,
 				508CFFD81B1F703A006665F7 /* Images.xcassets in Resources */,
@@ -230,6 +297,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5049D0391B26F71A00406466 /* Login.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,7 +341,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5049D03F1B26F77C00406466 /* LoginAndRegistration.swift in Sources */,
 				508CFFD31B1F703A006665F7 /* ViewController.swift in Sources */,
+				502D16BC1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.m in Sources */,
+				50A02F171B3140D900FE641E /* ReactiveSwift.swift in Sources */,
 				508CFFD11B1F703A006665F7 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -337,6 +408,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -356,6 +428,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -394,6 +467,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -405,8 +479,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Trainem/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.GuyKahlon.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Trainem-Bridging-Header.h";
 			};
 			name = Debug;
@@ -417,8 +494,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Trainem/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.GuyKahlon.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Trainem-Bridging-Header.h";
 			};
 			name = Release;
@@ -437,7 +517,9 @@
 				);
 				INFOPLIST_FILE = TrainemTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.GuyKahlon.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "TrainemTest-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Trainem.app/Trainem";
 			};
 			name = Debug;
@@ -452,7 +534,9 @@
 				);
 				INFOPLIST_FILE = TrainemTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.GuyKahlon.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "TrainemTest-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Trainem.app/Trainem";
 			};
 			name = Release;
