@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 @class RACSignal;
 
-@interface UITextField (UITextField_RACKeyboardSupport)
+@interface UITextField (RACKeyboardSupport)
 - (RACSignal *)rac_keyboardReturnSignal;
 @end

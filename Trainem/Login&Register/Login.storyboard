@@ -35,7 +35,7 @@
                                 <rect key="frame" x="150" y="149" width="300" height="30"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gt1-9D-xTJ">
                                 <rect key="frame" x="206" y="213" width="57" height="30"/>
@@ -51,6 +51,11 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="wcZ-6k-TCr">
+                                <rect key="frame" x="290" y="290" width="37" height="37"/>
+                                <animations/>
+                                <color key="color" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -61,7 +66,9 @@
                             <constraint firstItem="Gt1-9D-xTJ" firstAttribute="top" secondItem="hhJ-mX-TXA" secondAttribute="bottom" constant="34" id="Igv-58-1xn"/>
                             <constraint firstItem="LyX-eI-BDb" firstAttribute="top" secondItem="hLC-Xt-IGR" secondAttribute="bottom" constant="20" id="KNZ-Rg-uGP"/>
                             <constraint firstItem="8vw-cP-NRz" firstAttribute="top" secondItem="hhJ-mX-TXA" secondAttribute="bottom" constant="34" id="LiF-Sv-k75"/>
+                            <constraint firstAttribute="centerX" secondItem="wcZ-6k-TCr" secondAttribute="centerX" constant="-8.5" id="NDO-T3-nYe"/>
                             <constraint firstItem="hhJ-mX-TXA" firstAttribute="centerX" secondItem="Gt1-9D-xTJ" secondAttribute="centerX" constant="65.5" id="Q39-A3-AGc"/>
+                            <constraint firstAttribute="centerY" secondItem="wcZ-6k-TCr" secondAttribute="centerY" constant="-8.5" id="ZMK-Jf-DsS"/>
                             <constraint firstAttribute="centerX" secondItem="hhJ-mX-TXA" secondAttribute="centerX" constant="-0.5" id="kNc-zB-YYe"/>
                             <constraint firstAttribute="centerX" secondItem="mWi-gR-2M5" secondAttribute="centerX" constant="-0.5" id="tfa-N5-4gq"/>
                             <constraint firstItem="hhJ-mX-TXA" firstAttribute="top" secondItem="mWi-gR-2M5" secondAttribute="bottom" constant="17" id="xKT-PM-wU4"/>
@@ -70,6 +77,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="wcZ-6k-TCr" id="nAY-IU-yqv"/>
                         <outlet property="loginButton" destination="8vw-cP-NRz" id="oYB-Bm-kwK"/>
                         <outlet property="passwordTextField" destination="hhJ-mX-TXA" id="PGu-Fp-NGa"/>
                         <outlet property="registerButton" destination="Gt1-9D-xTJ" id="UNm-oT-fk7"/>

@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0E694777193E010F50CE36CA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABBD6228CDD0F5E3ED2AF420 /* libPods.a */; };
-		502D16BC1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 502D16BB1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.m */; };
+		502D16BC1B343F3A00FE8333 /* UITextField+RACKeyboardSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 502D16BB1B343F3A00FE8333 /* UITextField+RACKeyboardSupport.m */; };
+		502E9A491B34623900276D90 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502E9A481B34623900276D90 /* User.swift */; };
 		5049D0381B26F71A00406466 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5049D0371B26F71A00406466 /* Login.storyboard */; };
 		5049D0391B26F71A00406466 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5049D0371B26F71A00406466 /* Login.storyboard */; };
 		5049D03F1B26F77C00406466 /* LoginAndRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5049D03E1B26F77C00406466 /* LoginAndRegistration.swift */; };
@@ -19,6 +20,7 @@
 		508CFFDB1B1F703A006665F7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 508CFFD91B1F703A006665F7 /* LaunchScreen.xib */; };
 		508CFFE71B1F703A006665F7 /* TrainemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508CFFE61B1F703A006665F7 /* TrainemTests.swift */; };
 		50A02F171B3140D900FE641E /* ReactiveSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A02F161B3140D900FE641E /* ReactiveSwift.swift */; };
+		50F17F6B1B347C2D001BE1C3 /* ServerUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F17F6A1B347C2D001BE1C3 /* ServerUtilities.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,8 +37,9 @@
 		35EA3A31A339AC75A2A0B4B1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		5014EE051B27045D0055181E /* TrainemTest-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TrainemTest-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		5014EE061B27048E0055181E /* Trainem-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Trainem-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
-		502D16BA1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITextField+UITextField_RACKeyboardSupport.h"; path = "Trainem/Extensions/UITextField+UITextField_RACKeyboardSupport.h"; sourceTree = "<group>"; };
-		502D16BB1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITextField+UITextField_RACKeyboardSupport.m"; path = "Trainem/Extensions/UITextField+UITextField_RACKeyboardSupport.m"; sourceTree = "<group>"; };
+		502D16BA1B343F3A00FE8333 /* UITextField+RACKeyboardSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITextField+RACKeyboardSupport.h"; path = "Extensions/UITextField+RACKeyboardSupport.h"; sourceTree = "<group>"; };
+		502D16BB1B343F3A00FE8333 /* UITextField+RACKeyboardSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITextField+RACKeyboardSupport.m"; path = "Extensions/UITextField+RACKeyboardSupport.m"; sourceTree = "<group>"; };
+		502E9A481B34623900276D90 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Coomon/User.swift; sourceTree = "<group>"; };
 		5049D0371B26F71A00406466 /* Login.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Login.storyboard; path = "Login&Register/Login.storyboard"; sourceTree = "<group>"; };
 		5049D03E1B26F77C00406466 /* LoginAndRegistration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginAndRegistration.swift; path = "Login And Registration/LoginAndRegistration.swift"; sourceTree = "<group>"; };
 		508CFFCB1B1F703A006665F7 /* Trainem.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Trainem.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,6 +53,7 @@
 		508CFFE51B1F703A006665F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		508CFFE61B1F703A006665F7 /* TrainemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainemTests.swift; sourceTree = "<group>"; };
 		50A02F161B3140D900FE641E /* ReactiveSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReactiveSwift.swift; path = Extensions/ReactiveSwift/ReactiveSwift.swift; sourceTree = "<group>"; };
+		50F17F6A1B347C2D001BE1C3 /* ServerUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerUtilities.swift; sourceTree = "<group>"; };
 		6A2D55D2678ED4C5832633F3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		ABBD6228CDD0F5E3ED2AF420 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -80,6 +84,15 @@
 				35EA3A31A339AC75A2A0B4B1 /* Pods.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		502E9A471B34620C00276D90 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				50F17F691B347BAE001BE1C3 /* Server */,
+				50F17F681B347B99001BE1C3 /* Model */,
+			);
+			name = Common;
 			sourceTree = "<group>";
 		};
 		5049D03A1B26F72000406466 /* Login & Registration */ = {
@@ -118,8 +131,6 @@
 		508CFFC21B1F703A006665F7 = {
 			isa = PBXGroup;
 			children = (
-				502D16BA1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.h */,
-				502D16BB1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.m */,
 				508CFFCD1B1F703A006665F7 /* Trainem */,
 				508CFFE31B1F703A006665F7 /* TrainemTests */,
 				508CFFCC1B1F703A006665F7 /* Products */,
@@ -145,6 +156,7 @@
 				508CFFD21B1F703A006665F7 /* ViewController.swift */,
 				508CFFD41B1F703A006665F7 /* Main.storyboard */,
 				508CFFD71B1F703A006665F7 /* Images.xcassets */,
+				502E9A471B34620C00276D90 /* Common */,
 				50A02F141B31409900FE641E /* Extensions */,
 				508CFFCE1B1F703A006665F7 /* Supporting Files */,
 			);
@@ -190,9 +202,27 @@
 		50A02F151B3140A500FE641E /* ReactivaCocoa */ = {
 			isa = PBXGroup;
 			children = (
+				502D16BA1B343F3A00FE8333 /* UITextField+RACKeyboardSupport.h */,
+				502D16BB1B343F3A00FE8333 /* UITextField+RACKeyboardSupport.m */,
 				50A02F161B3140D900FE641E /* ReactiveSwift.swift */,
 			);
 			name = ReactivaCocoa;
+			sourceTree = "<group>";
+		};
+		50F17F681B347B99001BE1C3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				502E9A481B34623900276D90 /* User.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		50F17F691B347BAE001BE1C3 /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				50F17F6A1B347C2D001BE1C3 /* ServerUtilities.swift */,
+			);
+			name = Server;
 			sourceTree = "<group>";
 		};
 		82C311B10C59E0653CA6903B /* Frameworks */ = {
@@ -343,9 +373,11 @@
 			files = (
 				5049D03F1B26F77C00406466 /* LoginAndRegistration.swift in Sources */,
 				508CFFD31B1F703A006665F7 /* ViewController.swift in Sources */,
-				502D16BC1B343F3A00FE8333 /* UITextField+UITextField_RACKeyboardSupport.m in Sources */,
+				502E9A491B34623900276D90 /* User.swift in Sources */,
+				502D16BC1B343F3A00FE8333 /* UITextField+RACKeyboardSupport.m in Sources */,
 				50A02F171B3140D900FE641E /* ReactiveSwift.swift in Sources */,
 				508CFFD11B1F703A006665F7 /* AppDelegate.swift in Sources */,
+				50F17F6B1B347C2D001BE1C3 /* ServerUtilities.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

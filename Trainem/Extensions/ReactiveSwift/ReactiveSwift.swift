@@ -17,6 +17,15 @@ extension RACSignal {
         }
     }
     
+    func subscribeNextAs<T>(nextClosure:(T) -> (), errorClosure:(NSError)->()){
+        self.subscribeNext({ (next:AnyObject!) -> Void in
+            let nextAsT = next as! T
+            nextClosure(nextAsT)
+        }, error: { (error:NSError!) -> Void in
+            errorClosure(error)
+        })
+    }
+    
     func mapAs<T,U: AnyObject>(block: (T) -> U) -> Self {
         return map({(value: AnyObject!) in
             if let casted = value as? T {

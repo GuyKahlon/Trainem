@@ -6,13 +6,13 @@
 //
 //
 
-#import "UITextField+UITextField_RACKeyboardSupport.h"
+#import "UITextField+RACKeyboardSupport.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import <ReactiveCocoa/RACEXTScope.h>
 #import <ReactiveCocoa/NSObject+RACDescription.h>
 
 
-@implementation UITextField (UITextField_RACKeyboardSupport)
+@implementation UITextField (RACKeyboardSupport)
 
 - (RACSignal *)rac_keyboardReturnSignal {
     @weakify(self);

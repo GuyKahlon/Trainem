@@ -15,7 +15,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+    
+        Parse.setApplicationId("4kTlNHO3adnkxa3h3lZ9OaitDvcJY3mgvRU3isDq",clientKey: "2bPYjJrDvCXPTwpx5jJCx8AnEL48lam2dMr4oQrf")
+        
+        let isLoggedIn = PFUser.currentUser()?.username != nil ? true : false
+        if  isLoggedIn == false{
+            let loginStoryboard = UIStoryboard(name: "Login", bundle: NSBundle.mainBundle())
+            let loginViewControlle = loginStoryboard.instantiateInitialViewController() as! UIViewController
+            window?.rootViewController = loginViewControlle
+            window?.makeKeyAndVisible()
+        }
         return true
     }
 
