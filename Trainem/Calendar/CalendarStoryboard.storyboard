@@ -51,11 +51,21 @@
                                             <action selector="changeModeAction:" destination="cHb-Vg-5FK" eventType="touchUpInside" id="7nh-PL-bJY"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u8d-6W-48f">
+                                        <rect key="frame" x="69" y="440" width="73" height="30"/>
+                                        <state key="normal" title="New event">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="newEventAction:" destination="cHb-Vg-5FK" eventType="touchUpInside" id="0e9-kH-VUL"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="W8J-y4-raF" firstAttribute="leading" secondItem="7Kn-RE-ajX" secondAttribute="leading" constant="20" symbolic="YES" id="4Qk-xm-WTO"/>
                                     <constraint firstAttribute="bottom" secondItem="W8J-y4-raF" secondAttribute="bottom" constant="130" id="5lD-aL-dBx"/>
+                                    <constraint firstItem="u8d-6W-48f" firstAttribute="leading" secondItem="W8J-y4-raF" secondAttribute="trailing" constant="8" symbolic="YES" id="NSX-Xo-DqC"/>
                                     <constraint firstAttribute="trailing" secondItem="Z2t-ij-fMH" secondAttribute="trailing" id="Naa-DD-0Z0"/>
                                     <constraint firstItem="Z2t-ij-fMH" firstAttribute="leading" secondItem="RSr-nf-uYc" secondAttribute="leading" id="RIq-ls-EIu"/>
                                     <constraint firstItem="RSr-nf-uYc" firstAttribute="leading" secondItem="7Kn-RE-ajX" secondAttribute="leading" id="RjG-dQ-6tQ"/>
@@ -64,6 +74,7 @@
                                     <constraint firstItem="RSr-nf-uYc" firstAttribute="top" secondItem="7Kn-RE-ajX" secondAttribute="top" constant="20" symbolic="YES" id="YNN-BB-QU7"/>
                                     <constraint firstItem="Z2t-ij-fMH" firstAttribute="trailing" secondItem="RSr-nf-uYc" secondAttribute="trailing" id="bhD-yF-9lZ"/>
                                     <constraint firstAttribute="trailing" secondItem="RSr-nf-uYc" secondAttribute="trailing" id="mck-W0-nML"/>
+                                    <constraint firstItem="u8d-6W-48f" firstAttribute="baseline" secondItem="W8J-y4-raF" secondAttribute="baseline" id="rSZ-Vs-TSG"/>
                                     <constraint firstAttribute="bottom" secondItem="y1g-fY-rxL" secondAttribute="bottom" constant="130" id="z4G-nc-Adp"/>
                                 </constraints>
                                 <variation key="default">

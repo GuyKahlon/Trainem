@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import EventKitUI
 
 class CalendarViewController: UIViewController {
 
@@ -14,14 +15,15 @@ class CalendarViewController: UIViewController {
     @IBOutlet weak var calendarContentView: JTCalendarContentView!
     @IBOutlet weak var calendarContentViewHeight: NSLayoutConstraint!
     
-    var calendar: JTCalendar
+    var calendarUIManager: JTCalendar
+    var calendarModel: Calendar
     
     // MARK: - life cycle
     
     required init(coder aDecoder: NSCoder)
     {
-        self.calendar = JTCalendar()
-        
+        self.calendarUIManager = JTCalendar()
+        self.calendarModel = Calendar()
         super.init(coder: aDecoder)
     }
     
@@ -34,38 +36,62 @@ class CalendarViewController: UIViewController {
     
     override func viewDidAppear(animated: Bool)
     {
-        calendar.reloadData()
+        calendarUIManager.reloadData()
     }
     
     func setUpCalendar()
     {
-        let calendarAppearance = calendar.calendarAppearance()
+        let calendarAppearance = calendarUIManager.calendarAppearance()
         calendarAppearance.calendar().firstWeekday = 2; // Sunday == 1, Saturday == 7
         calendarAppearance.dayCircleRatio = 9/10
         calendarAppearance.ratioContentMenu = 1
-        calendar.menuMonthsView = calendarMenuView
-        calendar.contentView = calendarContentView
-        calendar.dataSource = self
+        calendarUIManager.menuMonthsView = calendarMenuView
+        calendarUIManager.contentView = calendarContentView
+        calendarUIManager.dataSource = self
     }
     
     // MARK: - bottuns callback
     
     @IBAction func todayButtonAction(sender: AnyObject)
     {
-        calendar.currentDate = NSDate()
+        calendarUIManager.currentDate = NSDate()
     }
     
     @IBAction func changeModeAction(sender: AnyObject)
     {
-        calendar.calendarAppearance().isWeekMode = !calendar.calendarAppearance().isWeekMode
+        calendarUIManager.calendarAppearance().isWeekMode = !calendarUIManager.calendarAppearance().isWeekMode
         exampleTransition()
+    }
+    
+    @IBAction func newEventAction(sender: AnyObject)
+    {
+        presentEditEventViewController()
+    }
+    
+    private func presentEditEventViewController()
+    {
+        let eventEditVC = EKEventEditViewController()
+        eventEditVC.eventStore = Calendar.eventStore
+        eventEditVC.editViewDelegate = self
+        let backButton = UIBarButtonItem(barButtonSystemItem: .Done, target: nil, action: "backPressed")
+        eventEditVC.navigationItem.leftBarButtonItem = nil
+        eventEditVC.navigationItem.leftBarButtonItem = backButton
+//        [[UIBarButtonItem alloc] initWithTitle:@"Back"
+//        style:UIBarButtonItemStyleBordered
+//        target:nil
+//        ction:@selector(backPressed:)];
+//        
+//        restaurantResults.navigationItem.leftBarButtonItem = backButton;
+        self.presentViewController(eventEditVC, animated: true) { () -> Void in
+            
+        }
     }
     
     func exampleTransition()
     {
         var newHeight: CGFloat = 300
         
-        if (calendar.calendarAppearance().isWeekMode)
+        if (calendarUIManager.calendarAppearance().isWeekMode)
         {
             newHeight = 75
         }
@@ -78,25 +104,56 @@ class CalendarViewController: UIViewController {
         UIView.animateWithDuration(0.25, animations: { () -> Void in
             self.calendarContentView.layer.opacity = 0
         }) { (finished) -> Void in
-            self.calendar.reloadAppearance()
+            self.calendarUIManager.reloadAppearance()
             UIView.animateWithDuration(0.25, animations: { () -> Void in
                 self.calendarContentView.layer.opacity = 1
             })
         }
     }
+    
+    private func saveEvent(event: EKEvent)
+    {
+        calendarModel.saveEvent(title: event.title, startDate: event.startDate, endDate: event.endDate, location: event.location)
+    }
+    
+    private func deleteEvent(event: EKEvent)
+    {
+        //todo: implement
+    }
 }
 
 extension CalendarViewController: JTCalendarDataSource{
     
-    func calendarHaveEvent(calendar: JTCalendar!, date: NSDate!) -> Bool {
+    func calendarHaveEvent(calendar: JTCalendar!, date: NSDate!) -> Bool
+    {
+        //todo: implement
         return true
     }
-    func calendarDidDateSelected(calendar: JTCalendar!, date: NSDate!) {
-        
+    
+    func calendarDidDateSelected(calendar: JTCalendar!, date: NSDate!)
+    {
+        //todo: implement
     }
 }
 
-
+extension CalendarViewController: EKEventEditViewDelegate{
+    
+    func eventEditViewController(controller: EKEventEditViewController!, didCompleteWithAction action: EKEventEditViewAction)
+    {
+        switch action.value
+        {
+            case EKEventEditViewActionCanceled.value: break
+            case EKEventEditViewActionDeleted.value: deleteEvent(controller.event)
+            case EKEventEditViewActionSaved.value: saveEvent(controller.event)
+            default: break
+        }
+        
+        
+        controller.dismissViewControllerAnimated(true, completion: { () -> Void in
+            
+        })
+    }
+}
 
 
 

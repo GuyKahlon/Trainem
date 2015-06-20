@@ -9,9 +9,9 @@
 import UIKit
 import EventKit
 
-class Calendar: NSObject {
+class Calendar: NSObject {//todo: move work to background threads
     
-    //event store singleton for use accross the application
+    //eventStore singleton for use accross the application
     static let eventStore = EKEventStore()
     
     override init()
@@ -38,22 +38,24 @@ class Calendar: NSObject {
     }
     
     //location is optional
-    func newEvent(# title: String, startDate: NSDate, endDate: NSDate, location: String? = nil)
+    func saveEvent(# title: String, startDate: NSDate, endDate: NSDate, location: String? = nil)
     {
         var event = EKEvent(eventStore: Calendar.eventStore)
         event.calendar = Calendar.eventStore.defaultCalendarForNewEvents
         event.title = title
         event.startDate = startDate
         event.endDate = endDate
+        event.location = location
         
         var error: NSError?
         var eventSaved = Calendar.eventStore.saveEvent(event, span: EKSpanThisEvent, commit: true, error: &error)
     }
     
+    //todo: cache fetched events in a dictionary date->[events] for each calendar day
     func fetchEvents(# fromDate: NSDate, toDate: NSDate)->NSArray?
     {
         var predicate = Calendar.eventStore.predicateForEventsWithStartDate(fromDate, endDate: toDate, calendars: nil)
-        var events = Calendar.eventStore.eventsMatchingPredicate(predicate)
+        var events = Calendar.eventStore.eventsMatchingPredicate(predicate) //event array is not necessarily ordered
         
         return events
     }
