@@ -9,27 +9,21 @@
 import UIKit
 import EventKit
 
+protocol CalenderModelDelegate: class{
+    func eventsDidUpdate()
+}
+
 class Calendar: NSObject {//todo: move work to background threads
     
+    weak var delegate: CalenderModelDelegate?
     //eventStore singleton for use accross the application
     static let eventStore = EKEventStore()
     var token =  dispatch_once_t()
-    //keys: start date
+    //keys: start date without time
     var cachedEvents = [NSDate : [EKEvent]]()
     static let defaultCalendar = NSCalendar.currentCalendar()
     
-    override init()
-    {
-        super.init()
-        
-        dispatch_once(&token, { () -> Void in
-            println("only once")
-            self.requestCalendarPermissionFromUser()
-        })
-        
-    }
-    
-    func requestCalendarPermissionFromUser()
+    func requestCalendarPermissionFromUserAndFetchEvents()
     {
         Calendar.eventStore.requestAccessToEntityType(EKEntityTypeEvent, completion: {(permissionGranted, error) -> Void in
      
@@ -55,9 +49,27 @@ class Calendar: NSObject {//todo: move work to background threads
         }
     }
     
-    //todo: cache fetched events in a dictionary date->[events] for each calendar day
+    /* 
+        :argument: date
+        :return: Calendar events from the same day as date without consideration of time on day
+    */
+    func fetchEventsOnDay(date: NSDate)->[EKEvent]?
+    {
+        let dailyEvents = fetchEvents(fromDate: date.dateWithBeginningOfDay(), toDate: date.dateWithEndOfDay())
+        return dailyEvents
+    }
+    
+    /*
+        Fetches events for the default calendar and caches the events if not cached.
+        All fetching methods should go through this method.
+    */
     func fetchEvents(# fromDate: NSDate, toDate: NSDate)->[EKEvent]?
     {
+//        if dateRangeIsContainedInCache()
+//        {
+//            
+//        }
+        
         var predicate = Calendar.eventStore.predicateForEventsWithStartDate(fromDate, endDate: toDate, calendars: nil)
         var events = Calendar.eventStore.eventsMatchingPredicate(predicate) //event array is not necessarily ordered
         if let fetchedEvents = events  as? [EKEvent]
@@ -71,20 +83,34 @@ class Calendar: NSObject {//todo: move work to background threads
     
     func cacheEvents(events: [EKEvent])
     {
+        //todo: consider different way to lock
         let lockQueue = dispatch_queue_create("com.test.LockQueue", nil)
         dispatch_sync(lockQueue) {
-            for event in events
+            
+            let dateAndEventArray = events.map{ (var event: EKEvent) -> (NSDate, EKEvent) in
+                let eventDate = event.startDate
+                let eventDateWithoutTime = eventDate.dateWithOutTimeOfDay()
+                return (eventDateWithoutTime, event)
+            }
+            
+            for dateAndEvent in dateAndEventArray
             {
-                if self.cachedEvents[event.startDate] == nil
+                let (date, event) = dateAndEvent
+                if self.cachedEvents[date] == nil
                 {
-                    self.cachedEvents[event.startDate] = [EKEvent]()
+                    self.cachedEvents[date] = [EKEvent]()
                 }
                 
-                var startDateCachedEvents = self.cachedEvents[event.startDate]
-                startDateCachedEvents?.append(event)
+                self.cachedEvents[date]?.append(event)
             }
+            
+            self.delegate?.eventsDidUpdate()
         }
     }
+    
+    //todo: add function to updateCacheForNewEvent - we cache a dictionary for daily events and wouldn't want to update the cache for future fetches for the same day, and a new event is the exception
+    
+    //todo: maybe release cache in dealloc?
     
     //location is optional
     func saveEvent(# title: String, startDate: NSDate, endDate: NSDate, location: String? = nil)
@@ -136,5 +162,30 @@ extension NSDate {
         }
         
         return nil
+    }
+    
+    func dateWithOutTimeOfDay()->(NSDate)
+    {
+        let components = NSCalendar.currentCalendar().components(.CalendarUnitYear | .CalendarUnitMonth | .CalendarUnitDay, fromDate: self)
+        let newDate = NSCalendar.currentCalendar().dateFromComponents(components)
+        return newDate!
+    }
+    
+    func dateWithBeginningOfDay()->NSDate
+    {
+        let calendar = NSCalendar.currentCalendar()
+        let components = calendar.components(.CalendarUnitYear | .CalendarUnitMonth | .CalendarUnitDay, fromDate: self)
+        return calendar.dateFromComponents(components)!
+    }
+    
+    func dateWithEndOfDay()->NSDate
+    {
+        let calendar = NSCalendar.currentCalendar()
+        let components = NSDateComponents()
+        components.day = 1
+        
+        var newDate = calendar.dateByAddingComponents(components, toDate: self.dateWithBeginningOfDay(), options: nil)
+        newDate = newDate?.dateByAddingTimeInterval(-1)
+        return newDate!
     }
 }

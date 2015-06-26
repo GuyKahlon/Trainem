@@ -25,6 +25,10 @@ class CalendarViewController: UIViewController {
         self.calendarUIManager = JTCalendar()
         self.calendarModel = Calendar()
         super.init(coder: aDecoder)
+        
+        self.calendarModel.delegate = self
+        self.calendarModel.requestCalendarPermissionFromUserAndFetchEvents()
+        
     }
     
     override func viewDidLoad()
@@ -114,12 +118,18 @@ class CalendarViewController: UIViewController {
     }
 }
 
+//the data source for the calendar UI
 extension CalendarViewController: JTCalendarDataSource{
     
     func calendarHaveEvent(calendar: JTCalendar!, date: NSDate!) -> Bool
     {
-        //todo: implement
-        return true
+        let dailyEvents = calendarModel.fetchEventsOnDay(date)
+        if let dailyEvents = dailyEvents where dailyEvents.count > 0
+        {
+            return true
+        }
+        
+        return false
     }
     
     func calendarDidDateSelected(calendar: JTCalendar!, date: NSDate!)
@@ -144,6 +154,14 @@ extension CalendarViewController: EKEventEditViewDelegate{
         controller.dismissViewControllerAnimated(true, completion: { () -> Void in
             
         })
+    }
+}
+
+extension CalendarViewController: CalenderModelDelegate{
+    
+    func eventsDidUpdate()
+    {
+        calendarUIManager.reloadData()
     }
 }
 
