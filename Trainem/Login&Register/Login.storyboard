@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="15A178w" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="yBw-WC-RPZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8121.17" systemVersion="15A204h" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="yBw-WC-RPZ">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8101.14"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
@@ -18,10 +19,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hLC-Xt-IGR">
-                                <rect key="frame" x="246" y="552" width="109" height="29"/>
+                                <rect key="frame" x="241" y="552" width="119" height="29"/>
                                 <animations/>
                                 <segments>
-                                    <segment title="Client"/>
+                                    <segment title="Trainee"/>
                                     <segment title="Coach"/>
                                 </segments>
                             </segmentedControl>
@@ -81,6 +82,7 @@
                         <outlet property="loginButton" destination="8vw-cP-NRz" id="oYB-Bm-kwK"/>
                         <outlet property="passwordTextField" destination="hhJ-mX-TXA" id="PGu-Fp-NGa"/>
                         <outlet property="registerButton" destination="Gt1-9D-xTJ" id="UNm-oT-fk7"/>
+                        <outlet property="userTypeSegmentControl" destination="hLC-Xt-IGR" id="epQ-pA-v9m"/>
                         <outlet property="usernameTextField" destination="mWi-gR-2M5" id="BQl-Sq-saJ"/>
                     </connections>
                 </viewController>

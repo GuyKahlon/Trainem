@@ -21,9 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let isLoggedIn = PFUser.currentUser()?.username != nil ? true : false
         if  isLoggedIn == false{
             let loginStoryboard = UIStoryboard(name: "Login", bundle: NSBundle.mainBundle())
-            let loginViewControlle = loginStoryboard.instantiateInitialViewController() as! UIViewController
-            window?.rootViewController = loginViewControlle
-            window?.makeKeyAndVisible()
+            if let loginViewControlle = loginStoryboard.instantiateInitialViewController(){
+                window?.rootViewController = loginViewControlle
+                window?.makeKeyAndVisible()
+            }            
         }
         return true
     }

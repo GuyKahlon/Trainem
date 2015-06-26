@@ -8,7 +8,6 @@
 
 #import "UITextField+RACKeyboardSupport.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
-#import <ReactiveCocoa/RACEXTScope.h>
 #import <ReactiveCocoa/NSObject+RACDescription.h>
 
 

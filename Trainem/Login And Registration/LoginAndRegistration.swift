@@ -15,10 +15,29 @@ class RegistrationViewController: UIViewController{
     @IBOutlet weak var registerButton: UIButton!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var userTypeSegmentControl: UISegmentedControl!
 
+    lazy private var runTimeProvider: RunTimeProvider = {
+        let lazyRunTimeProvider: RunTimeProvider
+        if self.userTypeSegmentControl.selectedSegmentIndex == 0{
+            lazyRunTimeProvider = RunTimeProvider(userType: .Coach)
+        }
+        else{
+            lazyRunTimeProvider = RunTimeProvider(userType: .Trainee)
+        }
+        return lazyRunTimeProvider
+    }()
+    
+    private var trainemClient:TrainemBaseClientProtocol{
+        get{
+            return TrainemClientFactory.TrainemClientForEnvironment(runTimeProvider)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //Username
         usernameTextField.rac_keyboardReturnSignal().subscribeNextAs { (textField: UITextField) -> () in
             if !textField.text!.isEmpty{
                 self.passwordTextField.becomeFirstResponder()
@@ -42,6 +61,7 @@ class RegistrationViewController: UIViewController{
            self.usernameTextField.backgroundColor = color
         }
     
+        //Password
         let validPasswordSignal = passwordTextField.rac_textSignal()
         .mapAs({ (password: String) -> NSNumber in
             return NSNumber(bool:self.isValidPassword(password))
@@ -53,12 +73,11 @@ class RegistrationViewController: UIViewController{
             }
             return UIColor.clearColor()
         }.subscribeNextAs { (color:UIColor) -> Void in
-            self.passwordTextField.backgroundColor = color
+            //self.passwordTextField.backgroundColor = color
+            self.passwordTextField.setGlowToView(color)
         }
-        
-        let numbers = [ true, false]
-        let total = numbers.reduce(true) { $0 && $1 }
-        
+
+        //Username & Password
         RACSignal.combineLatest([validUsernameSignal, validPasswordSignal])
         .mapAs({ (tuple: RACTuple) -> NSNumber in
                 let bools = tuple.allObjects() as! [Bool]
@@ -70,86 +89,78 @@ class RegistrationViewController: UIViewController{
             self.loginButton.enabled = valid.boolValue
         }
 
+
+        //Signup & signin
+        registerLogInAction()
+        registerSinUpAction()
+    }
+   
+    private func registerSinUpAction(){
         registerButton.rac_signalForControlEvents(.TouchUpInside)
-        .doNext { _ in
-            self.desableState()
-        }
-        .flattenMap(registerSignal)
-        .subscribeNext { res in
-            if let successfully = res as? Bool{
-                println("Register successfully")
-                self.gotoMainStoryboard()
-            }
-            else{
-                let error = res as! NSError
+            .doNext { _ in
+                self.desableState()
+            }.subscribeNext { _ in
+                self.signUpSignal().subscribeNextAs({ (success: Bool) -> () in
+                    print("Register successfully \(success)")
+                    self.gotoMainStoryboard()
+            }, errorClosure: { error in
                 self.enableState()
                 let meesage: String
                 switch error.code{
-                case ParseErrorsCode.RegisterUserAlreadyExist:
-                    meesage = "User Already Exist"
-                    break
-                default: meesage = "Error has occurred, please try again later..."
+                    case ParseErrorsCode.RegisterUserAlreadyExist:
+                        meesage = "User Already Exist"
+                        break
+                    default: meesage = "Error has occurred, please try again later..."
                 }
                 
                 let alert = UIAlertController(title: "Register Failure", message: meesage, preferredStyle: .Alert)
                 alert.addAction(UIAlertAction(title: "Close", style: .Default, handler: nil))
                 self.presentViewController(alert, animated: true, completion: nil)
-
-            }
+            })
         }
-        
+    }
+    
+    private func registerLogInAction(){
         loginButton.rac_signalForControlEvents(.TouchUpInside)
         .doNext { _ in
             self.desableState()
-        }
-        .flattenMap(signInSignal)
-        .subscribeNext { res in
-            if let user = res as? PFUser{
-                println("Login successfully")
+        }.subscribeNext { _ in
+            self.signInSignal().subscribeNextAs({ (user:User) -> () in
+                print("Login successfully with user = \(user)")
                 self.gotoMainStoryboard()
-            }
-            else{
-                let error = res as! NSError
-                self.enableState()
-                let meesage: String
-                switch error.code{
+        }, errorClosure: { error in
+            self.enableState()
+            let meesage: String
+            switch error.code{
                 case ParseErrorsCode.LoginInvalidCardentials:
                     meesage = "Worng user name or password, Please try again"
                     break
                 default: meesage = "Error has occurred, please try again later..."
-                }
-                
-                let alert = UIAlertController(title: "Login Failure", message: meesage, preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: "Close", style: .Default, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
             }
-        }
-    }
-   
-    func registerSignal(_ : AnyObject!) -> RACSignal {
-        return ParseUtilities.signUp(userName: usernameTextField.text, password: passwordTextField.text)
+            
+            let alert = UIAlertController(title: "Login Failure", message: meesage, preferredStyle: .Alert)
+            alert.addAction(UIAlertAction(title: "Close", style: .Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        })
+      }
     }
     
-    func signInSignal(_ : AnyObject!) -> RACSignal {
-        return ParseUtilities.login(userName: usernameTextField.text, password: passwordTextField.text)
+    private func signUpSignal() -> RACSignal {
+        return trainemClient.signUp(userName: usernameTextField.text!, password: passwordTextField.text!)
+    }
+    
+    private func signInSignal() -> RACSignal {
+        return trainemClient.login(userName: usernameTextField.text!, password: passwordTextField.text!)
     }
     
     private func isValidEmail(email: String)->Bool{
-        return (email as NSString).length > 3
+        return email.isEmail()
     }
     
     private func isValidPassword(password: String)->Bool{
         return (password as NSString).length > 3
     }
-    
-    private func login()->NSNumber{
-        return true
-    }
-    
-    private func registration()->NSNumber{
-        return true
-    }
-    
+
     private func desableState(){
         activityIndicator.startAnimating()
         loginButton.enabled = false
@@ -165,14 +176,14 @@ class RegistrationViewController: UIViewController{
     
     private func gotoMainStoryboard(){
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        let mainViewControlle = mainStoryboard.instantiateInitialViewController() as! UIViewController
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        dispatch_async(dispatch_get_main_queue(),{
-            appDelegate.window?.rootViewController?.presentViewController(mainViewControlle, animated: true){
-                activityIndicator.stopAnimating()
-            }
-        });
+        if let mainViewControlle = mainStoryboard.instantiateInitialViewController(){
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            dispatch_async(dispatch_get_main_queue(),{                appDelegate.window?.rootViewController?.presentViewController(mainViewControlle, animated: true){
+                    activityIndicator.stopAnimating()
+                }
+            });
+        }
     }
 }
 
