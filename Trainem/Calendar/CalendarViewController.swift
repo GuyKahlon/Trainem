@@ -31,7 +31,7 @@ class CalendarViewController: UIViewController {
     {
         super.viewDidLoad()
         
-        setUpCalendar()
+        setUpCalendarUI()
     }
     
     override func viewDidAppear(animated: Bool)
@@ -39,7 +39,7 @@ class CalendarViewController: UIViewController {
         calendarUIManager.reloadData()
     }
     
-    func setUpCalendar()
+    func setUpCalendarUI()
     {
         let calendarAppearance = calendarUIManager.calendarAppearance()
         calendarAppearance.calendar().firstWeekday = 2; // Sunday == 1, Saturday == 7
@@ -73,15 +73,6 @@ class CalendarViewController: UIViewController {
         let eventEditVC = EKEventEditViewController()
         eventEditVC.eventStore = Calendar.eventStore
         eventEditVC.editViewDelegate = self
-        let backButton = UIBarButtonItem(barButtonSystemItem: .Done, target: nil, action: "backPressed")
-        eventEditVC.navigationItem.leftBarButtonItem = nil
-        eventEditVC.navigationItem.leftBarButtonItem = backButton
-//        [[UIBarButtonItem alloc] initWithTitle:@"Back"
-//        style:UIBarButtonItemStyleBordered
-//        target:nil
-//        ction:@selector(backPressed:)];
-//        
-//        restaurantResults.navigationItem.leftBarButtonItem = backButton;
         self.presentViewController(eventEditVC, animated: true) { () -> Void in
             
         }
@@ -114,6 +105,7 @@ class CalendarViewController: UIViewController {
     private func saveEvent(event: EKEvent)
     {
         calendarModel.saveEvent(title: event.title, startDate: event.startDate, endDate: event.endDate, location: event.location)
+        calendarUIManager.reloadData()
     }
     
     private func deleteEvent(event: EKEvent)
