@@ -42,14 +42,16 @@ class EventsCache: NSObject {
                 
                 self.cachedEventsDictionary[date]?.insert(event)
                 
-                self.updateFirstCachedDate(date)
-                self.updateLastCachedDate(date)
+                self.updateFirstCachedDate(fromDate)
+                self.updateLastCachedDate(toDate)
             }
         }
     }
     
-    func updateFirstCachedDate(date: NSDate)
+    func updateFirstCachedDate(var date: NSDate)
     {
+        date = date.dateWithOutTimeOfDay()
+        
         if let first = firstCachedDate
         {
             if date.isLessThanDate(first)
@@ -65,8 +67,10 @@ class EventsCache: NSObject {
         }
     }
     
-    func updateLastCachedDate(date: NSDate)
+    func updateLastCachedDate(var date: NSDate)
     {
+        date = date.dateWithOutTimeOfDay()
+        
         if let last = lastCachedDate
         {
             if date.isGreaterThanDate(last)
@@ -110,9 +114,12 @@ class EventsCache: NSObject {
     
     func dateRangeIsCached(# fromDate: NSDate, toDate: NSDate)->Bool
     {
+        let fromDay = fromDate.dateWithOutTimeOfDay()
+        let toDay = toDate.dateWithOutTimeOfDay()
+        
         if let first = firstCachedDate, last = lastCachedDate
         {
-            return first.isLessThanDate(fromDate) && last.isGreaterThanDate(toDate)
+            return !last.isLessThanDate(fromDate) && !first.isGreaterThanDate(toDate)
         }
         
         return false
