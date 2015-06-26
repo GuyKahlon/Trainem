@@ -20,7 +20,7 @@ class Calendar: NSObject {//todo: move work to background threads
     static let eventStore = EKEventStore()
     var token =  dispatch_once_t()
     //keys: start date without time
-    var cachedEvents = [NSDate : [EKEvent]]()
+    var cachedEvents = [NSDate : Set<EKEvent>]()
     static let defaultCalendar = NSCalendar.currentCalendar()
     
     func requestCalendarPermissionFromUserAndFetchEvents()
@@ -65,12 +65,13 @@ class Calendar: NSObject {//todo: move work to background threads
     */
     func fetchEvents(# fromDate: NSDate, toDate: NSDate)->[EKEvent]?
     {
-//        if dateRangeIsContainedInCache()
-//        {
-//            
-//        }
+        if dateRangeIsContainedInCache(fromDate: fromDate, toDate: toDate)
+        {
+            return cachedEventsArray()
+        }
         
         var predicate = Calendar.eventStore.predicateForEventsWithStartDate(fromDate, endDate: toDate, calendars: nil)
+        //todo: it's a synchronized method!
         var events = Calendar.eventStore.eventsMatchingPredicate(predicate) //event array is not necessarily ordered
         if let fetchedEvents = events  as? [EKEvent]
         {
@@ -98,14 +99,50 @@ class Calendar: NSObject {//todo: move work to background threads
                 let (date, event) = dateAndEvent
                 if self.cachedEvents[date] == nil
                 {
-                    self.cachedEvents[date] = [EKEvent]()
+                    self.cachedEvents[date] = Set<EKEvent>()
                 }
                 
-                self.cachedEvents[date]?.append(event)
+                self.cachedEvents[date]?.insert(event)
             }
             
             self.delegate?.eventsDidUpdate()
         }
+    }
+    
+    func cachedEventsArray()->[EKEvent]
+    {
+        var events = [EKEvent]()
+        for eventArray in cachedEvents.values
+        {
+            events += eventArray
+        }
+        
+        return events
+    }
+    
+    func dateRangeIsContainedInCache(# fromDate: NSDate, toDate: NSDate)->Bool
+    {
+        var cacheContainsStartDate = false
+        var cacheContainsEndDate = false
+        for date in cachedEvents.keys
+        {
+            if date.isLessThanDate(fromDate)
+            {
+                cacheContainsStartDate = true
+            }
+            
+            if date.isGreaterThanDate(toDate)
+            {
+                cacheContainsEndDate = true
+            }
+            
+            if (cacheContainsStartDate && cacheContainsEndDate)
+            {
+                return true
+            }
+        }
+        
+        return false
     }
     
     //todo: add function to updateCacheForNewEvent - we cache a dictionary for daily events and wouldn't want to update the cache for future fetches for the same day, and a new event is the exception
@@ -187,5 +224,16 @@ extension NSDate {
         var newDate = calendar.dateByAddingComponents(components, toDate: self.dateWithBeginningOfDay(), options: nil)
         newDate = newDate?.dateByAddingTimeInterval(-1)
         return newDate!
+    }
+    
+    func isGreaterThanDate(dateToCompare : NSDate) -> Bool
+    {
+        return self.compare(dateToCompare) == NSComparisonResult.OrderedDescending
+    }
+    
+    
+    func isLessThanDate(dateToCompare : NSDate) -> Bool
+    {
+        return self.compare(dateToCompare) == NSComparisonResult.OrderedAscending
     }
 }
