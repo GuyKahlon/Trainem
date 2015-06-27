@@ -11,15 +11,12 @@ import EventKit
 
 class Calendar: NSObject {//todo: move work to background threads
     
-    //eventStore singleton for use accross the application
-    //todo: make eventStore a singleton
-    static let eventStore = EKEventStore()
     let eventsCache = EventsCache()
     static let defaultCalendar = NSCalendar.currentCalendar()
     
     func requestCalendarPermissionFromUserAndFetchEvents()
     {
-        Calendar.eventStore.requestAccessToEntityType(EKEntityTypeEvent, completion: {(permissionGranted, error) -> Void in
+        EventKitManager.eventStore.requestAccessToEntityType(EKEntityTypeEvent, completion: {(permissionGranted, error) -> Void in
      
             if (permissionGranted)
             {
@@ -73,9 +70,9 @@ class Calendar: NSObject {//todo: move work to background threads
         
         let fetchAndCacheStartDate = fromDate.startOfMonth()
         let fetchAndCacheToDate = toDate.endOfMonth()
-        var predicate = Calendar.eventStore.predicateForEventsWithStartDate(fetchAndCacheStartDate, endDate: fetchAndCacheToDate, calendars: nil)
+        var predicate = EventKitManager.eventStore.predicateForEventsWithStartDate(fetchAndCacheStartDate, endDate: fetchAndCacheToDate, calendars: nil)
         //todo: it's a synchronized method!
-        var events = Calendar.eventStore.eventsMatchingPredicate(predicate) //event array is not necessarily ordered
+        var events = EventKitManager.eventStore.eventsMatchingPredicate(predicate) //event array is not necessarily ordered
         
         if let fetchedEvents = events  as? [EKEvent]
         {
@@ -100,15 +97,15 @@ class Calendar: NSObject {//todo: move work to background threads
     //location is optional
     func saveEvent(# title: String, startDate: NSDate, endDate: NSDate, location: String? = nil)
     {
-        var event = EKEvent(eventStore: Calendar.eventStore)
-        event.calendar = Calendar.eventStore.defaultCalendarForNewEvents
+        var event = EKEvent(eventStore: EventKitManager.eventStore)
+        event.calendar = EventKitManager.eventStore.defaultCalendarForNewEvents
         event.title = title
         event.startDate = startDate
         event.endDate = endDate
         event.location = location
         
         var error: NSError?
-        var eventSaved = Calendar.eventStore.saveEvent(event, span: EKSpanThisEvent, commit: true, error: &error)
+        var eventSaved = EventKitManager.eventStore.saveEvent(event, span: EKSpanThisEvent, commit: true, error: &error)
     }
 }
 

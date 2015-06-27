@@ -77,7 +77,7 @@ class CalendarViewController: UIViewController {
     private func presentEditEventViewController()
     {
         let eventEditVC = EKEventEditViewController()
-        eventEditVC.eventStore = Calendar.eventStore
+        eventEditVC.eventStore = EventKitManager.eventStore
         eventEditVC.editViewDelegate = self
         self.presentViewController(eventEditVC, animated: true) { () -> Void in
             
