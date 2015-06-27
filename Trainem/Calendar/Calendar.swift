@@ -9,13 +9,8 @@
 import UIKit
 import EventKit
 
-protocol CalenderModelDelegate: class{
-    func eventsDidUpdate()
-}
-
 class Calendar: NSObject {//todo: move work to background threads
     
-    weak var delegate: CalenderModelDelegate?
     //eventStore singleton for use accross the application
     //todo: make eventStore a singleton
     static let eventStore = EKEventStore()
@@ -96,8 +91,6 @@ class Calendar: NSObject {//todo: move work to background threads
     func cacheEvents(# fromDate: NSDate, toDate: NSDate, events: [EKEvent])
     {
         eventsCache.cacheEvents(fromDate: fromDate, toDate: toDate, events: events)
-        //todo: code review: maybe the delegate isn't needed
-//        self.delegate?.eventsDidUpdate()
     }
     
     //todo: add function to updateCacheForNewEvent - we cache a dictionary for daily events and wouldn't want to update the cache for future fetches for the same day, and a new event is the exception

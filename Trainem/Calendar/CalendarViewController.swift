@@ -29,7 +29,6 @@ class CalendarViewController: UIViewController {
         self.calendarModel = Calendar()
         super.init(coder: aDecoder)
         
-        self.calendarModel.delegate = self
         self.calendarModel.requestCalendarPermissionFromUserAndFetchEvents()
         
     }
@@ -159,15 +158,6 @@ extension CalendarViewController: EKEventEditViewDelegate{
         })
     }
 }
-
-extension CalendarViewController: CalenderModelDelegate{
-    
-    func eventsDidUpdate()
-    {
-        calendarUIManager.reloadData()
-    }
-}
-
 
 
 
