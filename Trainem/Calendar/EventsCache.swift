@@ -42,9 +42,32 @@ class EventsCache: NSObject {
                 
                 self.cachedEventsDictionary[date]?.insert(event)
                 
-                self.updateFirstCachedDate(fromDate)
-                self.updateLastCachedDate(toDate)
+                self.updateFirstAndLastCachedDates(startDate: fromDate, endDate: toDate)
             }
+        }
+    }
+    
+    //update the cached range if and only if the new range is overlapping or containing current cached date range
+    func updateFirstAndLastCachedDates(# startDate: NSDate, endDate: NSDate)
+    {
+        if firstCachedDate == nil
+        {
+            firstCachedDate = startDate
+        }
+        
+        if lastCachedDate == nil
+        {
+            lastCachedDate = endDate
+        }
+        
+        if startDate.isLessThanDate(firstCachedDate!) && !endDate.isLessThanDate(firstCachedDate!)
+        {
+            firstCachedDate = startDate
+        }
+        
+        if endDate.isGreaterThanDate(lastCachedDate!) && !startDate.isGreaterThanDate(lastCachedDate!)
+        {
+            lastCachedDate = endDate
         }
     }
     
@@ -92,7 +115,7 @@ class EventsCache: NSObject {
         
         for date in cachedEventsDictionary.keys
         {
-            if date.isGreaterThanDate(fromDate) && date.isLessThanDate(toDate)
+            if !date.isGreaterThanDate(toDate) && !date.isLessThanDate(fromDate)
             {
                 events = events.union(cachedEventsDictionary[date]!)
             }
@@ -101,7 +124,7 @@ class EventsCache: NSObject {
         return events
     }
     
-    func cachedEventsArray()->Set<EKEvent>
+    func cachedEvents()->Set<EKEvent>
     {
         var events = Set<EKEvent>()
         for eventArray in cachedEventsDictionary.values
