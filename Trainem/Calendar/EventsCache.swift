@@ -11,12 +11,13 @@ import EventKit
 
 /*
     This class manages the events cache.
-    It contains only consecutive days' events
+    It caches only consecutive days' events
 */
 class EventsCache: NSObject {
    
-    //keys: start date without time
-    var cachedEventsDictionary = [NSDate : Set<EKEvent>]()
+    //keys: start date without time on day
+    let cache = NSCache()
+    let calendar = NSCalendar.currentCalendar()
     var firstCachedDate: NSDate?
     var lastCachedDate: NSDate?
     
@@ -35,12 +36,16 @@ class EventsCache: NSObject {
             for dateAndEvent in dateAndEventArray
             {
                 let (date, event) = dateAndEvent
-                if self.cachedEventsDictionary[date] == nil
+                if self.cache.objectForKey(date) == nil
                 {
-                    self.cachedEventsDictionary[date] = Set<EKEvent>()
+                    self.cache.setObject(Set<EKEvent>(), forKey: date)
                 }
                 
-                self.cachedEventsDictionary[date]?.insert(event)
+                if var events = self.cache.objectForKey(date) as? Set<EKEvent>
+                {
+                    events.insert(event)
+                    self.cache.setObject(events, forKey: date)
+                }
                 
                 self.updateFirstAndLastCachedDates(startDate: fromDate, endDate: toDate)
             }
@@ -50,6 +55,7 @@ class EventsCache: NSObject {
     //update the cached range if and only if the new range is overlapping or containing current cached date range
     func updateFirstAndLastCachedDates(# startDate: NSDate, endDate: NSDate)
     {
+        //todo: add NSCacheDelegate to control the firstCachedDate and last in case something is removed from cache
         if firstCachedDate == nil
         {
             firstCachedDate = startDate
@@ -59,78 +65,42 @@ class EventsCache: NSObject {
         {
             lastCachedDate = endDate
         }
-        
-        if startDate.isLessThanDate(firstCachedDate!) && !endDate.isLessThanDate(firstCachedDate!)
+        //the 2 hour comparison is for 2 reasons: day light savings causes a 1 hour gap, endDate is on 23:59 and start date is on 00:00
+        if startDate.isLessThanDate(firstCachedDate!) && !endDate.isLessThanDateByMoreThanTwoHours(firstCachedDate!)
         {
             firstCachedDate = startDate
         }
         
-        if endDate.isGreaterThanDate(lastCachedDate!) && !startDate.isGreaterThanDate(lastCachedDate!)
+        if endDate.isGreaterThanDate(lastCachedDate!) && !startDate.isGreaterThanDateByMoreThanTwoHours(lastCachedDate!)
         {
             lastCachedDate = endDate
         }
     }
     
-    func updateFirstCachedDate(var date: NSDate)
-    {
-        date = date.dateWithOutTimeOfDay()
-        
-        if let first = firstCachedDate
-        {
-            if date.isLessThanDate(first)
-            {
-                firstCachedDate = date
-            }
-            
-            return
-        }
-        else
-        {
-            firstCachedDate = date
-        }
-    }
-    
-    func updateLastCachedDate(var date: NSDate)
-    {
-        date = date.dateWithOutTimeOfDay()
-        
-        if let last = lastCachedDate
-        {
-            if date.isGreaterThanDate(last)
-            {
-                lastCachedDate = date
-            }
-            
-            return
-        }
-        else
-        {
-            lastCachedDate = date
-        }
-    }
-    
     func cachedEvents(# fromDate: NSDate, toDate: NSDate)->Set<EKEvent>
     {
+        let toDate = toDate.dateWithOutTimeOfDay()
         var events = Set<EKEvent>()
-        
-        for date in cachedEventsDictionary.keys
-        {
-            if !date.isGreaterThanDate(toDate) && !date.isLessThanDate(fromDate)
+        let fromDateWithoutTime = fromDate.dateWithOutTimeOfDay()
+        let previousDateWithoutTime = fromDate.previousDayWithSameTime()
+     
+        var components = calendar.components(.CalendarUnitHour, fromDate: previousDateWithoutTime)
+
+        var dateCount = 0
+        calendar.enumerateDatesStartingAfterDate(previousDateWithoutTime, matchingComponents: components, options: .MatchStrictly, usingBlock: { (date: NSDate!, exactMatch: Bool, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+            
+            if date.isGreaterThanDate(toDate)
             {
-                events = events.union(cachedEventsDictionary[date]!)
+                stop.memory = true
             }
-        }
-        
-        return events
-    }
-    
-    func cachedEvents()->Set<EKEvent>
-    {
-        var events = Set<EKEvent>()
-        for eventArray in cachedEventsDictionary.values
-        {
-            events = events.union(eventArray)
-        }
+            
+//            println("\(self.cache.objectForKey(date))")
+            if let cachedEventsForDate = self.cache.objectForKey(date) as? Set<EKEvent>
+            {
+                println(cachedEventsForDate.first)
+                events = events.union(cachedEventsForDate)
+            }
+        })
         
         return events
     }

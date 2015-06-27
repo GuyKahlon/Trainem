@@ -10,7 +10,7 @@ import UIKit
 import EventKitUI
 
 
-//todo: 1. check why new event set on simulator calendar isn't updated in our calendar 2. when create/delete event add/remove it off the cache 3. use NSCache instead of dictionary
+//todo: 1. when create/delete event add/remove it off the cache
 
 class CalendarViewController: UIViewController {
 
