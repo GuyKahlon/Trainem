@@ -37,6 +37,23 @@ class EventsCache: NSObject {
         super.init()
     }
     
+    //events are cached on day base, so the end date is redundent
+    func cacheNewEvent(event: EKEvent)
+    {
+        cacheEvents(fromDate: event.startDate, toDate: event.startDate, events: [event])
+    }
+    
+    //events are cached on day base, so the end date is redundent
+    func unCacheEvent(event: EKEvent)
+    {
+        var events = cachedEvents(fromDate: event.startDate, toDate: event.startDate)
+        if count(events) > 0
+        {
+            events.remove(event)
+            EventsCache.cache.setObject(events, forKey: event.startDate.dateWithOutTimeOfDay())            
+        }
+    }
+    
     /*
         serialized operation in a background thread
     */
@@ -100,7 +117,7 @@ class EventsCache: NSObject {
         let toDate = toDate.dateWithOutTimeOfDay()
         var events = Set<EKEvent>()
         let fromDateWithoutTime = fromDate.dateWithOutTimeOfDay()
-        let previousDateWithoutTime = fromDate.previousDayWithSameTime()
+        let previousDateWithoutTime = fromDateWithoutTime.previousDayWithSameTime()
      
         var components = calendar.components(.CalendarUnitHour, fromDate: previousDateWithoutTime)
 

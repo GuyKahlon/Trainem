@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 GuyKahlon. All rights reserved.
 //
 
+import Foundation
+
 extension NSDate {
     
     func startOfMonth() -> NSDate?

@@ -17,6 +17,11 @@
 		8E0767B01B3DDCD400DE673B /* EventsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0767AF1B3DDCD400DE673B /* EventsCache.swift */; };
 		8E972C711B3EDD3D0047D271 /* EventKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E972C701B3EDD3D0047D271 /* EventKitManager.swift */; };
 		8E972C731B3EE0C00047D271 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E972C721B3EE0C00047D271 /* DateExtension.swift */; };
+		8ED15FBA1B4FAD2F00B3FB55 /* EventsCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED15FB91B4FAD2F00B3FB55 /* EventsCacheTests.swift */; };
+		8ED15FBB1B4FAD7600B3FB55 /* EventsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0767AF1B3DDCD400DE673B /* EventsCache.swift */; };
+		8ED15FBC1B4FADAE00B3FB55 /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF54F1B1B35DB910001A169 /* Calendar.swift */; };
+		8ED15FBD1B4FADB300B3FB55 /* EventKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E972C701B3EDD3D0047D271 /* EventKitManager.swift */; };
+		8ED15FC21B4FAF0000B3FB55 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E972C721B3EE0C00047D271 /* DateExtension.swift */; };
 		8EF54F161B35A39D0001A169 /* CalendarStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EF54F151B35A39D0001A169 /* CalendarStoryboard.storyboard */; };
 		8EF54F1A1B35A5F40001A169 /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF54F191B35A5F40001A169 /* CalendarViewController.swift */; };
 		8EF54F1C1B35DB910001A169 /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF54F1B1B35DB910001A169 /* Calendar.swift */; };
@@ -49,6 +54,9 @@
 		8E0767AF1B3DDCD400DE673B /* EventsCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsCache.swift; sourceTree = "<group>"; };
 		8E972C701B3EDD3D0047D271 /* EventKitManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventKitManager.swift; path = Trainem/Common/EventKitManager.swift; sourceTree = SOURCE_ROOT; };
 		8E972C721B3EE0C00047D271 /* DateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		8ED15FB91B4FAD2F00B3FB55 /* EventsCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsCacheTests.swift; sourceTree = "<group>"; };
+		8ED15FBF1B4FAE0100B3FB55 /* TrainemTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TrainemTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		8ED15FC41B4FAFEA00B3FB55 /* TestsPrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestsPrefixHeader.pch; sourceTree = "<group>"; };
 		8EF54F151B35A39D0001A169 /* CalendarStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CalendarStoryboard.storyboard; sourceTree = "<group>"; };
 		8EF54F191B35A5F40001A169 /* CalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		8EF54F1B1B35DB910001A169 /* Calendar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
@@ -129,8 +137,11 @@
 		508CFFE31B1F703A006665F7 /* TrainemTests */ = {
 			isa = PBXGroup;
 			children = (
+				8ED15FB91B4FAD2F00B3FB55 /* EventsCacheTests.swift */,
 				508CFFE61B1F703A006665F7 /* TrainemTests.swift */,
 				508CFFE41B1F703A006665F7 /* Supporting Files */,
+				8ED15FBF1B4FAE0100B3FB55 /* TrainemTests-Bridging-Header.h */,
+				8ED15FC41B4FAFEA00B3FB55 /* TestsPrefixHeader.pch */,
 			);
 			path = TrainemTests;
 			sourceTree = "<group>";
@@ -315,6 +326,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				508CFFE71B1F703A006665F7 /* TrainemTests.swift in Sources */,
+				8ED15FC21B4FAF0000B3FB55 /* DateExtension.swift in Sources */,
+				8ED15FBB1B4FAD7600B3FB55 /* EventsCache.swift in Sources */,
+				8ED15FBD1B4FADB300B3FB55 /* EventKitManager.swift in Sources */,
+				8ED15FBA1B4FAD2F00B3FB55 /* EventsCacheTests.swift in Sources */,
+				8ED15FBC1B4FADAE00B3FB55 /* Calendar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,6 +475,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -470,6 +487,8 @@
 				INFOPLIST_FILE = TrainemTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "TrainemTests/TrainemTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Trainem.app/Trainem";
 			};
 			name = Debug;
@@ -478,6 +497,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -485,6 +505,7 @@
 				INFOPLIST_FILE = TrainemTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "TrainemTests/TrainemTests-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Trainem.app/Trainem";
 			};
 			name = Release;

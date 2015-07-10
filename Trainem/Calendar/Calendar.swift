@@ -40,8 +40,7 @@ class Calendar: NSObject {//todo: move work to background threads
             return fetchEvents(fromDate: startOfMonthDate, toDate: endOfMonthDate)
         }
         
-        //todo: why can't it return nil?
-        return Set<EKEvent>()
+        return nil
     }
     
     /* 
@@ -104,5 +103,14 @@ class Calendar: NSObject {//todo: move work to background threads
         
         var error: NSError?
         var eventSaved = EventKitManager.eventStore.saveEvent(event, span: EKSpanThisEvent, commit: true, error: &error)
+        
+        if eventSaved
+        {
+            self.eventsCache.cacheNewEvent(event)
+        }
+        else
+        {
+            NSLog("error creating new event: \(error)")
+        }
     }
 }
