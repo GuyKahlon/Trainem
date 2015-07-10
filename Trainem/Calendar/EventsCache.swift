@@ -16,17 +16,33 @@ import EventKit
 class EventsCache: NSObject {
    
     //keys: start date without time on day
-    let cache = NSCache()
+    static let cache = NSCache()
     let calendar = NSCalendar.currentCalendar()
     var firstCachedDate: NSDate?
     var lastCachedDate: NSDate?
     
+    var serialCachingOperationQueue: NSOperationQueue
+    var reteiveCacheOperationQueue: NSOperationQueue
+    
+    override init()
+    {
+        EventsCache.cache.name = "Events.Cache"
+        serialCachingOperationQueue = NSOperationQueue()
+        serialCachingOperationQueue.maxConcurrentOperationCount = 1 //serial queue
+        serialCachingOperationQueue.name = "serialCachingOperationQueue"
+        
+        reteiveCacheOperationQueue = NSOperationQueue()
+        reteiveCacheOperationQueue.name = "reteiveCacheOperationQueue"
+        
+        super.init()
+    }
+    
+    /*
+        serialized operation in a background thread
+    */
     func cacheEvents(# fromDate: NSDate, toDate: NSDate, events: [EKEvent])
     {
-        //todo: consider different way to lock
-        let lockQueue = dispatch_queue_create("com.test.LockQueue", nil)
-        dispatch_sync(lockQueue) {
-            
+        serialCachingOperationQueue.addOperationWithBlock { () -> Void in
             let dateAndEventArray = events.map{ (var event: EKEvent) -> (NSDate, EKEvent) in
                 let eventDate = event.startDate
                 let eventDateWithoutTime = eventDate.dateWithOutTimeOfDay()
@@ -36,15 +52,15 @@ class EventsCache: NSObject {
             for dateAndEvent in dateAndEventArray
             {
                 let (date, event) = dateAndEvent
-                if self.cache.objectForKey(date) == nil
+                if EventsCache.cache.objectForKey(date) == nil
                 {
-                    self.cache.setObject(Set<EKEvent>(), forKey: date)
+                    EventsCache.cache.setObject(Set<EKEvent>(), forKey: date)
                 }
                 
-                if var events = self.cache.objectForKey(date) as? Set<EKEvent>
+                if var events = EventsCache.cache.objectForKey(date) as? Set<EKEvent>
                 {
                     events.insert(event)
-                    self.cache.setObject(events, forKey: date)
+                    EventsCache.cache.setObject(events, forKey: date)
                 }
                 
                 self.updateFirstAndLastCachedDates(startDate: fromDate, endDate: toDate)
@@ -77,8 +93,10 @@ class EventsCache: NSObject {
         }
     }
     
+    
     func cachedEvents(# fromDate: NSDate, toDate: NSDate)->Set<EKEvent>
     {
+//        reteiveCacheOperationQueue.add
         let toDate = toDate.dateWithOutTimeOfDay()
         var events = Set<EKEvent>()
         let fromDateWithoutTime = fromDate.dateWithOutTimeOfDay()
@@ -94,10 +112,8 @@ class EventsCache: NSObject {
                 stop.memory = true
             }
             
-//            println("\(self.cache.objectForKey(date))")
-            if let cachedEventsForDate = self.cache.objectForKey(date) as? Set<EKEvent>
+            if let cachedEventsForDate = EventsCache.cache.objectForKey(date) as? Set<EKEvent>
             {
-                println(cachedEventsForDate.first)
                 events = events.union(cachedEventsForDate)
             }
         })
