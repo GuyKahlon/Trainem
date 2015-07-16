@@ -150,4 +150,9 @@ class EventsCache: NSObject {
         
         return false
     }
+    
+    func cleanEventsCache()
+    {
+        EventsCache.cache.removeAllObjects()
+    }
 }

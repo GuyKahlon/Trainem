@@ -9,9 +9,6 @@
 import UIKit
 import EventKitUI
 
-
-//todo: 1. when create/delete event add/remove it off the cache
-
 class CalendarViewController: UIViewController {
 
     @IBOutlet weak var calendarMenuView: JTCalendarMenuView!
@@ -110,13 +107,13 @@ class CalendarViewController: UIViewController {
     
     private func saveEvent(event: EKEvent)
     {
-        calendarModel.saveEvent(title: event.title, startDate: event.startDate, endDate: event.endDate, location: event.location)
+        calendarModel.saveEventToCalendar(title: event.title, startDate: event.startDate, endDate: event.endDate, location: event.location)
         calendarUIManager.reloadData()
     }
     
     private func deleteEvent(event: EKEvent)
     {
-        //todo: implement
+        calendarModel.removeEventFromCalendar(event)
     }
 }
 

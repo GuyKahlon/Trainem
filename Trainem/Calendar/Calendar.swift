@@ -12,7 +12,7 @@ import EventKit
 class Calendar: NSObject {//todo: move work to background threads
     
     let eventsCache = EventsCache()
-    static let defaultCalendar = NSCalendar.currentCalendar()
+    static var defaultCalendar = NSCalendar.currentCalendar()
     
     func requestCalendarPermissionFromUserAndFetchEvents()
     {
@@ -87,12 +87,10 @@ class Calendar: NSObject {//todo: move work to background threads
         eventsCache.cacheEvents(fromDate: fromDate, toDate: toDate, events: events)
     }
     
-    //todo: add function to updateCacheForNewEvent - we cache a dictionary for daily events and wouldn't want to update the cache for future fetches for the same day, and a new event is the exception
-    
     //todo: maybe release cache in dealloc?
     
     //location is optional
-    func saveEvent(# title: String, startDate: NSDate, endDate: NSDate, location: String? = nil)
+    func saveEventToCalendar(# title: String, startDate: NSDate, endDate: NSDate, location: String? = nil)
     {
         var event = EKEvent(eventStore: EventKitManager.eventStore)
         event.calendar = EventKitManager.eventStore.defaultCalendarForNewEvents
@@ -112,5 +110,25 @@ class Calendar: NSObject {//todo: move work to background threads
         {
             NSLog("error creating new event: \(error)")
         }
+    }
+    
+    func removeEventFromCalendar(event: EKEvent)
+    {
+        var error: NSError?
+        var eventRemoved = EventKitManager.eventStore.removeEvent(event, span: EKSpanThisEvent, commit: true, error: &error)
+        
+        if eventRemoved
+        {
+            self.eventsCache.unCacheEvent(event)
+        }
+        else
+        {
+            NSLog("error creating new event: \(error)")
+        }
+    }
+    
+    func cleanEventsCache()
+    {
+        eventsCache.cleanEventsCache()
     }
 }
