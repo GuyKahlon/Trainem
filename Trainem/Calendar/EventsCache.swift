@@ -24,6 +24,9 @@ class EventsCache: NSObject {
     var serialCachingOperationQueue: NSOperationQueue
     var reteiveCacheOperationQueue: NSOperationQueue
     
+    typealias CacheNewEventsBlock = (newCachedEvents: [EKEvent]?, error: NSError?)->()
+    typealias UnCacheEventBlock = (unCachedEvent: EKEvent?, error: NSError?)->()
+    
     override init()
     {
         EventsCache.cache.name = "Events.Cache"
@@ -38,26 +41,16 @@ class EventsCache: NSObject {
     }
     
     //events are cached on day base, so the end date is redundent
-    func cacheNewEvent(event: EKEvent)
+    //completion block is used mainly for testing
+    func cacheNewEvent(event: EKEvent, completionBlock: CacheNewEventsBlock? = nil)
     {
-        cacheEvents(fromDate: event.startDate, toDate: event.startDate, events: [event])
-    }
-    
-    //events are cached on day base, so the end date is redundent
-    func unCacheEvent(event: EKEvent)
-    {
-        var events = cachedEvents(fromDate: event.startDate, toDate: event.startDate)
-        if count(events) > 0
-        {
-            events.remove(event)
-            EventsCache.cache.setObject(events, forKey: event.startDate.dateWithOutTimeOfDay())            
-        }
+        cacheEvents(fromDate: event.startDate, toDate: event.startDate, events: [event], completionBlock: completionBlock)
     }
     
     /*
         serialized operation in a background thread
     */
-    func cacheEvents(# fromDate: NSDate, toDate: NSDate, events: [EKEvent])
+    func cacheEvents(# fromDate: NSDate, toDate: NSDate, events: [EKEvent], completionBlock: CacheNewEventsBlock? = nil)
     {
         serialCachingOperationQueue.addOperationWithBlock { () -> Void in
             let dateAndEventArray = events.map{ (var event: EKEvent) -> (NSDate, EKEvent) in
@@ -82,6 +75,31 @@ class EventsCache: NSObject {
                 
                 self.updateFirstAndLastCachedDates(startDate: fromDate, endDate: toDate)
             }
+            
+            if let completionBlock = completionBlock
+            {
+                completionBlock(newCachedEvents: events, error: nil)
+            }
+        }
+    }
+    
+    //events are cached on day base, so the end date is redundent
+    func unCacheEvent(event: EKEvent, completionBlock: UnCacheEventBlock? = nil)
+    {
+        var events = cachedEvents(fromDate: event.startDate, toDate: event.startDate)
+        if count(events) > 0
+        {
+            events.remove(event)
+            EventsCache.cache.setObject(events, forKey: event.startDate.dateWithOutTimeOfDay())
+            if let completionBlock = completionBlock
+            {
+                completionBlock(unCachedEvent: event, error: nil)
+            }
+        }
+        else if let completionBlock = completionBlock
+        {
+            let error = NSError(domain: "caching", code: 1, userInfo: ["failure" : "event not found in cache in the first place"])
+            completionBlock(unCachedEvent: nil, error: nil)
         }
     }
     
@@ -115,13 +133,12 @@ class EventsCache: NSObject {
     {
 //        reteiveCacheOperationQueue.add
         let toDate = toDate.dateWithOutTimeOfDay()
-        var events = Set<EKEvent>()
+        var cachedEvents = Set<EKEvent>()
         let fromDateWithoutTime = fromDate.dateWithOutTimeOfDay()
         let previousDateWithoutTime = fromDateWithoutTime.previousDayWithSameTime()
      
         var components = calendar.components(.CalendarUnitHour, fromDate: previousDateWithoutTime)
-
-        var dateCount = 0
+        
         calendar.enumerateDatesStartingAfterDate(previousDateWithoutTime, matchingComponents: components, options: .MatchStrictly, usingBlock: { (date: NSDate!, exactMatch: Bool, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
             
             if date.isGreaterThanDate(toDate)
@@ -131,11 +148,11 @@ class EventsCache: NSObject {
             
             if let cachedEventsForDate = EventsCache.cache.objectForKey(date) as? Set<EKEvent>
             {
-                events = events.union(cachedEventsForDate)
+                cachedEvents = cachedEvents.union(cachedEventsForDate)
             }
         })
         
-        return events
+        return cachedEvents
     }
     
     func dateRangeIsCached(# fromDate: NSDate, toDate: NSDate)->Bool

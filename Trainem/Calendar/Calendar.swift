@@ -13,6 +13,8 @@ class Calendar: NSObject {//todo: move work to background threads
     
     let eventsCache = EventsCache()
     static var defaultCalendar = NSCalendar.currentCalendar()
+    typealias SaveNewEventBlock = (savedEvent: EKEvent?, error: NSError?)->()
+    typealias RemoveEventBlock = (removedEvent: EKEvent?, error: NSError?)->()
     
     func requestCalendarPermissionFromUserAndFetchEvents()
     {
@@ -90,7 +92,7 @@ class Calendar: NSObject {//todo: move work to background threads
     //todo: maybe release cache in dealloc?
     
     //location is optional
-    func saveEventToCalendar(# title: String, startDate: NSDate, endDate: NSDate, location: String? = nil)
+    func saveEventToCalendar(# title: String, startDate: NSDate, endDate: NSDate, location: String? = nil, completionBlock: SaveNewEventBlock? = nil)
     {
         var event = EKEvent(eventStore: EventKitManager.eventStore)
         event.calendar = EventKitManager.eventStore.defaultCalendarForNewEvents
@@ -105,14 +107,24 @@ class Calendar: NSObject {//todo: move work to background threads
         if eventSaved
         {
             self.eventsCache.cacheNewEvent(event)
+            
+            if let completionBlock = completionBlock
+            {
+                completionBlock(savedEvent: event, error: nil)
+            }
         }
         else
         {
+            if let completionBlock = completionBlock
+            {
+                let error = NSError(domain: "calendar", code: 1, userInfo: ["failure" : "event not saved in event store"])
+                completionBlock(savedEvent: nil, error: error)
+            }
             NSLog("error creating new event: \(error)")
         }
     }
     
-    func removeEventFromCalendar(event: EKEvent)
+    func removeEventFromCalendar(event: EKEvent, completionBlock: RemoveEventBlock? = nil)
     {
         var error: NSError?
         var eventRemoved = EventKitManager.eventStore.removeEvent(event, span: EKSpanThisEvent, commit: true, error: &error)
@@ -120,9 +132,19 @@ class Calendar: NSObject {//todo: move work to background threads
         if eventRemoved
         {
             self.eventsCache.unCacheEvent(event)
+            
+            if let completionBlock = completionBlock
+            {
+                completionBlock(removedEvent: event, error: nil)
+            }
         }
         else
         {
+            if let completionBlock = completionBlock
+            {
+                let error = NSError(domain: "calendar", code: 1, userInfo: ["failure" : "event not removed from event store"])
+                completionBlock(removedEvent: nil, error: error)
+            }
             NSLog("error creating new event: \(error)")
         }
     }

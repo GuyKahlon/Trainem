@@ -14,20 +14,25 @@ class EventsTests: XCTestCase {
 
     var eventsCache = EventsCache()
     var calendarModel = Calendar()
-    var calendar = EventKitManager.eventStore.defaultCalendarForNewEvents
+    var calendar: EKCalendar?
     
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        calendar = EventKitManager.eventStore.defaultCalendarForNewEvents
+        calendarModel.cleanEventsCache()
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        calendarModel.cleanEventsCache()
+        calendar = nil
         super.tearDown()
     }
 
     //todo: code review - problem with asynchronous method returns
     func testUnCacheEvent() {
+        
+        let expectation = expectationWithDescription("all methods are done")
+        
         var event = EKEvent(eventStore: EventKitManager.eventStore)
         event.calendar = EventKitManager.eventStore.defaultCalendarForNewEvents
         event.title = "new event"
@@ -36,23 +41,38 @@ class EventsTests: XCTestCase {
         
         var cachedEvents: Set<EKEvent>?
         
-        dispatch_sync(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), {
-            self.eventsCache.cacheNewEvent(event)
+        self.eventsCache.cacheNewEvent(event, completionBlock: { (newCachedEvents, error) -> () in
+            
+            if let error = error
+            {
+                XCTFail("event not cached: \(error)")
+                return
+            }
+            
             cachedEvents = self.eventsCache.cachedEvents(fromDate: NSDate(), toDate: NSDate())
+            
+            if !(cachedEvents!.count > 0)
+            {
+                XCTFail("event not cached: \(error)")
+            }
+        
+            self.eventsCache.unCacheEvent(event, completionBlock: { (unCachedEvent, error) -> () in
+                
+                if let error = error
+                {
+                    XCTFail("event not uncached: \(error)")
+                    return
+                }
+                
+                cachedEvents = self.eventsCache.cachedEvents(fromDate: NSDate(), toDate: NSDate())
+                if (cachedEvents!.count > 0)
+                {
+                    XCTFail("event \(event) not un-cached properly")
+                }
+                
+                expectation.fulfill()
+            })
         })
-        
-        if !(cachedEvents!.count > 0)
-        {
-            XCTAssert(false, "event \(event) not cached properly")
-        }
-        
-        eventsCache.unCacheEvent(event)
-        
-        cachedEvents = eventsCache.cachedEvents(fromDate: NSDate(), toDate: NSDate())
-        if (cachedEvents!.count > 0)
-        {
-            XCTAssert(false, "event \(event) not un-cached properly")
-        }
     }
     
     /*
@@ -61,10 +81,10 @@ class EventsTests: XCTestCase {
     */
     func testCreateAndRemoveEvent() {
         
-        calendarModel.cleanEventsCache()
-        
         let initialCachedEvents = calendarModel.eventsCache.cachedEvents(fromDate: NSDate(), toDate: NSDate())
         XCTAssert(initialCachedEvents.count == 0, "events cache is not clean as a preliminary for this test")
+        
+        let expectation = expectationWithDescription("all methods are done")
         
         var event = EKEvent(eventStore: EventKitManager.eventStore)
         event.calendar = EventKitManager.eventStore.defaultCalendarForNewEvents
@@ -72,34 +92,50 @@ class EventsTests: XCTestCase {
         event.startDate = NSDate()
         event.endDate = NSDate()
         
-        dispatch_sync(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), { () -> Void in
-            self.calendarModel.saveEventToCalendar(title: event.title, startDate: event.startDate, endDate: event.endDate)
+        self.calendarModel.saveEventToCalendar(title: event.title, startDate: event.startDate, endDate: event.endDate, location: nil, completionBlock: { (savedEvent, error) -> () in
+            
+            if let error = error
+            {
+                XCTFail("event not saved: \(error)")
+                return
+            }
+            
+            if let currentEvents = self.calendarModel.fetchEventsOnDay(event.startDate), currentEvent = currentEvents.first
+            {
+                XCTAssert(currentEvent.title == event.title && currentEvent.startDate == event.startDate && currentEvent.endDate == event.endDate, "saved event's properties not as expected")
+            }
+            else
+            {
+                XCTFail("event not saved")
+            }
+            
+            self.calendarModel.eventsCache.cacheNewEvent(event, completionBlock: { (newCachedEvents, error) -> () in
+                if let error = error
+                {
+                    XCTFail("event not cached: \(error)")
+                    return
+                }
+                
+                let cachedEvents = self.calendarModel.eventsCache.cachedEvents(fromDate: event.startDate, toDate: event.endDate)
+                XCTAssert(cachedEvents.count == 1, "event not cached")
+                
+                self.calendarModel.removeEventFromCalendar(event, completionBlock: { (removedEvent, error) -> () in
+                    if let error = error
+                    {
+                        XCTFail("event not removed from calendar: \(error)")
+                        return
+                    }
+                    
+                    let currentEventsAfterRemoval = self.calendarModel.fetchEventsOnDay(event.startDate)
+                    XCTAssert(currentEventsAfterRemoval!.count == 0, "event not removed from calendar")
+                    
+                    let cachedEventsAfterRemoval = self.calendarModel.eventsCache.cachedEvents(fromDate: event.startDate, toDate: event.endDate)
+                    XCTAssert(cachedEventsAfterRemoval.count == 0, "event not uncached")
+                    
+                    expectation.fulfill()
+                })
+            })
         })
-        
-        let currentEvents = self.calendarModel.fetchEventsOnDay(event.startDate)
-        XCTAssert(currentEvents!.count == 1, "event not saved as expected")
-        
-        if let currentEvents = currentEvents, currentEvent = currentEvents.first
-        {
-            XCTAssert(currentEvent.title == event.title && currentEvent.startDate == event.startDate && currentEvent.endDate == event.endDate, "saved event's properties not as expected")
-        }
-        else
-        {
-            XCTAssert(false, "event not saved")
-        }
-        
-        let cachedEvents = calendarModel.eventsCache.cachedEvents(fromDate: event.startDate, toDate: event.endDate)
-        XCTAssert(cachedEvents.count == 1, "event not cached")
-        
-        dispatch_sync(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), { () -> Void in
-            self.calendarModel.removeEventFromCalendar(event)
-        })
-        
-        let currentEventsAfterRemoval = self.calendarModel.fetchEventsOnDay(event.startDate)
-        XCTAssert(currentEventsAfterRemoval!.count == 0, "event not removed from calendar")
-        
-        let cachedEventsAfterRemoval = calendarModel.eventsCache.cachedEvents(fromDate: event.startDate, toDate: event.endDate)
-        XCTAssert(cachedEventsAfterRemoval.count == 0, "event not uncached")
     }
 
     func testPerformanceExample() {
