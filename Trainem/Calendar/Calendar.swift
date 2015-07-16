@@ -15,6 +15,8 @@ class Calendar: NSObject {//todo: move work to background threads
     static var defaultCalendar = NSCalendar.currentCalendar()
     typealias SaveNewEventBlock = (savedEvent: EKEvent?, error: NSError?)->()
     typealias RemoveEventBlock = (removedEvent: EKEvent?, error: NSError?)->()
+    typealias CacheNewEventsBlock = (newCachedEvents: [EKEvent]?, error: NSError?)->()
+    typealias UnCacheEventBlock = (unCachedEvent: EKEvent?, error: NSError?)->()
     
     func requestCalendarPermissionFromUserAndFetchEvents()
     {
@@ -84,9 +86,19 @@ class Calendar: NSObject {//todo: move work to background threads
         return nil
     }
     
+    func cacheNewEvent(event: EKEvent, completionBlock: CacheNewEventsBlock?)
+    {
+        eventsCache.cacheNewEvent(event, completionBlock: completionBlock)
+    }
+    
     func cacheEvents(# fromDate: NSDate, toDate: NSDate, events: [EKEvent])
     {
         eventsCache.cacheEvents(fromDate: fromDate, toDate: toDate, events: events)
+    }
+    
+    func cachedEvents(# fromDate: NSDate, toDate: NSDate)->Set<EKEvent>
+    {
+        return eventsCache.cachedEvents(fromDate: fromDate, toDate: toDate)
     }
     
     //todo: maybe release cache in dealloc?
@@ -131,7 +143,7 @@ class Calendar: NSObject {//todo: move work to background threads
         
         if eventRemoved
         {
-            self.eventsCache.unCacheEvent(event)
+            unCacheEvent(event)
             
             if let completionBlock = completionBlock
             {
@@ -147,6 +159,11 @@ class Calendar: NSObject {//todo: move work to background threads
             }
             NSLog("error creating new event: \(error)")
         }
+    }
+    
+    func unCacheEvent(event:EKEvent, completionBlock: UnCacheEventBlock? = nil)
+    {
+        eventsCache.unCacheEvent(event, completionBlock: completionBlock)
     }
     
     func cleanEventsCache()

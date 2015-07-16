@@ -12,7 +12,7 @@ import EventKit
 
 class EventsTests: XCTestCase {
 
-    var eventsCache = EventsCache()
+//    var eventsCache = EventsCache()
     var calendarModel = Calendar()
     var calendar: EKCalendar?
     
@@ -20,10 +20,10 @@ class EventsTests: XCTestCase {
         super.setUp()
         calendar = EventKitManager.eventStore.defaultCalendarForNewEvents
         calendarModel.cleanEventsCache()
+//        eventsCache.cleanEventsCache()
     }
     
     override func tearDown() {
-        calendarModel.cleanEventsCache()
         calendar = nil
         super.tearDown()
     }
@@ -41,7 +41,7 @@ class EventsTests: XCTestCase {
         
         var cachedEvents: Set<EKEvent>?
         
-        self.eventsCache.cacheNewEvent(event, completionBlock: { (newCachedEvents, error) -> () in
+        self.calendarModel.cacheNewEvent(event, completionBlock: { (newCachedEvents, error) -> () in
             
             if let error = error
             {
@@ -49,14 +49,14 @@ class EventsTests: XCTestCase {
                 return
             }
             
-            cachedEvents = self.eventsCache.cachedEvents(fromDate: NSDate(), toDate: NSDate())
+            cachedEvents = self.calendarModel.cachedEvents(fromDate: NSDate(), toDate: NSDate())
             
             if !(cachedEvents!.count > 0)
             {
                 XCTFail("event not cached: \(error)")
             }
         
-            self.eventsCache.unCacheEvent(event, completionBlock: { (unCachedEvent, error) -> () in
+            self.calendarModel.unCacheEvent(event, completionBlock: { (unCachedEvent, error) -> () in
                 
                 if let error = error
                 {
@@ -64,7 +64,7 @@ class EventsTests: XCTestCase {
                     return
                 }
                 
-                cachedEvents = self.eventsCache.cachedEvents(fromDate: NSDate(), toDate: NSDate())
+                cachedEvents = self.calendarModel.cachedEvents(fromDate: NSDate(), toDate: NSDate())
                 if (cachedEvents!.count > 0)
                 {
                     XCTFail("event \(event) not un-cached properly")
@@ -81,7 +81,7 @@ class EventsTests: XCTestCase {
     */
     func testCreateAndRemoveEvent() {
         
-        let initialCachedEvents = calendarModel.eventsCache.cachedEvents(fromDate: NSDate(), toDate: NSDate())
+        let initialCachedEvents = calendarModel.cachedEvents(fromDate: NSDate(), toDate: NSDate())
         XCTAssert(initialCachedEvents.count == 0, "events cache is not clean as a preliminary for this test")
         
         let expectation = expectationWithDescription("all methods are done")
@@ -109,14 +109,14 @@ class EventsTests: XCTestCase {
                 XCTFail("event not saved")
             }
             
-            self.calendarModel.eventsCache.cacheNewEvent(event, completionBlock: { (newCachedEvents, error) -> () in
+            self.calendarModel.cacheNewEvent(event, completionBlock: { (newCachedEvents, error) -> () in
                 if let error = error
                 {
                     XCTFail("event not cached: \(error)")
                     return
                 }
                 
-                let cachedEvents = self.calendarModel.eventsCache.cachedEvents(fromDate: event.startDate, toDate: event.endDate)
+                let cachedEvents = self.calendarModel.cachedEvents(fromDate: event.startDate, toDate: event.endDate)
                 XCTAssert(cachedEvents.count == 1, "event not cached")
                 
                 self.calendarModel.removeEventFromCalendar(event, completionBlock: { (removedEvent, error) -> () in
@@ -129,7 +129,7 @@ class EventsTests: XCTestCase {
                     let currentEventsAfterRemoval = self.calendarModel.fetchEventsOnDay(event.startDate)
                     XCTAssert(currentEventsAfterRemoval!.count == 0, "event not removed from calendar")
                     
-                    let cachedEventsAfterRemoval = self.calendarModel.eventsCache.cachedEvents(fromDate: event.startDate, toDate: event.endDate)
+                    let cachedEventsAfterRemoval = self.calendarModel.cachedEvents(fromDate: event.startDate, toDate: event.endDate)
                     XCTAssert(cachedEventsAfterRemoval.count == 0, "event not uncached")
                     
                     expectation.fulfill()

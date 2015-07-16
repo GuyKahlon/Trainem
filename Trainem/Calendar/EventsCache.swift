@@ -16,7 +16,7 @@ import EventKit
 class EventsCache: NSObject {
    
     //keys: start date without time on day
-    static let cache = NSCache()
+    static var cache = NSCache()
     let calendar = NSCalendar.currentCalendar()
     var firstCachedDate: NSDate?
     var lastCachedDate: NSDate?
@@ -171,5 +171,6 @@ class EventsCache: NSObject {
     func cleanEventsCache()
     {
         EventsCache.cache.removeAllObjects()
+//        EventsCache.cache = NSCache()
     }
 }
