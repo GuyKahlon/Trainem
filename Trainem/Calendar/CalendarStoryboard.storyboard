@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D2134" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cHb-Vg-5FK">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--Calendar View Controller-->
@@ -27,14 +28,14 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z2t-ij-fMH" customClass="JTCalendarContentView">
-                                        <rect key="frame" x="0.0" y="78" width="600" height="300"/>
+                                        <rect key="frame" x="0.0" y="78" width="600" height="200"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="300" id="8Je-vg-X7F"/>
+                                            <constraint firstAttribute="height" constant="200" id="8Je-vg-X7F"/>
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W8J-y4-raF">
-                                        <rect key="frame" x="20" y="440" width="41" height="30"/>
+                                        <rect key="frame" x="20" y="286" width="41" height="30"/>
                                         <state key="normal" title="Today">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -43,7 +44,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y1g-fY-rxL">
-                                        <rect key="frame" x="483" y="440" width="97" height="30"/>
+                                        <rect key="frame" x="483" y="286" width="97" height="30"/>
                                         <state key="normal" title="Change mode">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -52,7 +53,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u8d-6W-48f">
-                                        <rect key="frame" x="69" y="440" width="73" height="30"/>
+                                        <rect key="frame" x="69" y="286" width="73" height="30"/>
                                         <state key="normal" title="New event">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -60,28 +61,83 @@
                                             <action selector="newEventAction:" destination="cHb-Vg-5FK" eventType="touchUpInside" id="0e9-kH-VUL"/>
                                         </connections>
                                     </button>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="xEt-h1-hTu">
+                                        <rect key="frame" x="0.0" y="324" width="600" height="276"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <prototypes>
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="event cell" id="D5d-Ce-kSo" customClass="GoogleCalendarEventCell" customModule="Trainem" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="D5d-Ce-kSo" id="Dpl-vL-Nit">
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3SC-KD-bw3" userLabel="Event View">
+                                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.25000000000000006" translatesAutoresizingMaskIntoConstraints="NO" id="hn1-ic-XBL" userLabel="time label">
+                                                                    <rect key="frame" x="20" y="21" width="560" height="22.5"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="8hR-1A-rvG" userLabel="title label">
+                                                                    <rect key="frame" x="20" y="0.0" width="560" height="21"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                            <color key="backgroundColor" red="0.5" green="0.0" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <constraints>
+                                                                <constraint firstItem="8hR-1A-rvG" firstAttribute="leading" secondItem="3SC-KD-bw3" secondAttribute="leading" constant="20" symbolic="YES" id="3nK-x8-RpX"/>
+                                                                <constraint firstItem="8hR-1A-rvG" firstAttribute="top" secondItem="3SC-KD-bw3" secondAttribute="top" id="6dF-dY-ByG"/>
+                                                                <constraint firstAttribute="trailing" secondItem="hn1-ic-XBL" secondAttribute="trailing" constant="20" symbolic="YES" id="C0I-nw-F1Q"/>
+                                                                <constraint firstAttribute="bottom" secondItem="hn1-ic-XBL" secondAttribute="bottom" id="PMk-c2-uPW"/>
+                                                                <constraint firstAttribute="trailing" secondItem="8hR-1A-rvG" secondAttribute="trailing" constant="20" symbolic="YES" id="Rdl-OI-szM"/>
+                                                                <constraint firstItem="hn1-ic-XBL" firstAttribute="top" secondItem="8hR-1A-rvG" secondAttribute="bottom" id="e6Z-O4-BnF"/>
+                                                                <constraint firstItem="8hR-1A-rvG" firstAttribute="height" secondItem="3SC-KD-bw3" secondAttribute="height" multiplier="0.5" id="eml-Vf-X2d"/>
+                                                                <constraint firstItem="hn1-ic-XBL" firstAttribute="leading" secondItem="3SC-KD-bw3" secondAttribute="leading" constant="20" symbolic="YES" id="rQc-g9-LBT"/>
+                                                            </constraints>
+                                                        </view>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="3SC-KD-bw3" firstAttribute="top" secondItem="Dpl-vL-Nit" secondAttribute="top" id="5O5-vL-DNC"/>
+                                                        <constraint firstAttribute="bottom" secondItem="3SC-KD-bw3" secondAttribute="bottom" id="6Su-LH-PAM"/>
+                                                        <constraint firstAttribute="trailing" secondItem="3SC-KD-bw3" secondAttribute="trailing" id="NTn-LR-gOC"/>
+                                                        <constraint firstItem="3SC-KD-bw3" firstAttribute="leading" secondItem="Dpl-vL-Nit" secondAttribute="leading" id="hDg-TD-lTA"/>
+                                                    </constraints>
+                                                </tableViewCellContentView>
+                                                <connections>
+                                                    <outlet property="eventTimeLabel" destination="hn1-ic-XBL" id="tai-fC-1nP"/>
+                                                    <outlet property="eventTitleLabel" destination="8hR-1A-rvG" id="gl6-XY-6uL"/>
+                                                </connections>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="cHb-Vg-5FK" id="qmC-oC-CJw"/>
+                                            <outlet property="delegate" destination="cHb-Vg-5FK" id="qqF-u8-6Ce"/>
+                                        </connections>
+                                    </tableView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="W8J-y4-raF" firstAttribute="leading" secondItem="7Kn-RE-ajX" secondAttribute="leading" constant="20" symbolic="YES" id="4Qk-xm-WTO"/>
-                                    <constraint firstAttribute="bottom" secondItem="W8J-y4-raF" secondAttribute="bottom" constant="130" id="5lD-aL-dBx"/>
+                                    <constraint firstItem="xEt-h1-hTu" firstAttribute="top" secondItem="W8J-y4-raF" secondAttribute="bottom" constant="8" symbolic="YES" id="BSN-JL-pmW"/>
+                                    <constraint firstAttribute="trailing" secondItem="xEt-h1-hTu" secondAttribute="trailing" id="EUy-ss-bAF"/>
+                                    <constraint firstItem="y1g-fY-rxL" firstAttribute="top" secondItem="Z2t-ij-fMH" secondAttribute="bottom" constant="8" symbolic="YES" id="Ix4-JX-dan"/>
                                     <constraint firstItem="u8d-6W-48f" firstAttribute="leading" secondItem="W8J-y4-raF" secondAttribute="trailing" constant="8" symbolic="YES" id="NSX-Xo-DqC"/>
-                                    <constraint firstAttribute="trailing" secondItem="Z2t-ij-fMH" secondAttribute="trailing" id="Naa-DD-0Z0"/>
+                                    <constraint firstAttribute="bottom" secondItem="xEt-h1-hTu" secondAttribute="bottom" id="ONw-av-COx"/>
                                     <constraint firstItem="Z2t-ij-fMH" firstAttribute="leading" secondItem="RSr-nf-uYc" secondAttribute="leading" id="RIq-ls-EIu"/>
                                     <constraint firstItem="RSr-nf-uYc" firstAttribute="leading" secondItem="7Kn-RE-ajX" secondAttribute="leading" id="RjG-dQ-6tQ"/>
                                     <constraint firstItem="Z2t-ij-fMH" firstAttribute="top" secondItem="RSr-nf-uYc" secondAttribute="bottom" constant="8" symbolic="YES" id="S7o-oe-6Z3"/>
+                                    <constraint firstItem="xEt-h1-hTu" firstAttribute="leading" secondItem="7Kn-RE-ajX" secondAttribute="leading" id="T4A-JE-cFm"/>
                                     <constraint firstAttribute="trailing" secondItem="y1g-fY-rxL" secondAttribute="trailing" constant="20" symbolic="YES" id="W1F-Nc-bDn"/>
                                     <constraint firstItem="RSr-nf-uYc" firstAttribute="top" secondItem="7Kn-RE-ajX" secondAttribute="top" constant="20" symbolic="YES" id="YNN-BB-QU7"/>
                                     <constraint firstItem="Z2t-ij-fMH" firstAttribute="trailing" secondItem="RSr-nf-uYc" secondAttribute="trailing" id="bhD-yF-9lZ"/>
                                     <constraint firstAttribute="trailing" secondItem="RSr-nf-uYc" secondAttribute="trailing" id="mck-W0-nML"/>
                                     <constraint firstItem="u8d-6W-48f" firstAttribute="baseline" secondItem="W8J-y4-raF" secondAttribute="baseline" id="rSZ-Vs-TSG"/>
-                                    <constraint firstAttribute="bottom" secondItem="y1g-fY-rxL" secondAttribute="bottom" constant="130" id="z4G-nc-Adp"/>
+                                    <constraint firstItem="W8J-y4-raF" firstAttribute="top" secondItem="Z2t-ij-fMH" secondAttribute="bottom" constant="8" symbolic="YES" id="vnW-zX-KR1"/>
                                 </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="Naa-DD-0Z0"/>
-                                    </mask>
-                                </variation>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -96,6 +152,7 @@
                         <outlet property="calendarContentView" destination="Z2t-ij-fMH" id="Yxt-7z-NZJ"/>
                         <outlet property="calendarContentViewHeight" destination="8Je-vg-X7F" id="TzG-1w-z5i"/>
                         <outlet property="calendarMenuView" destination="RSr-nf-uYc" id="Rft-dD-GMH"/>
+                        <outlet property="tableView" destination="xEt-h1-hTu" id="Yef-aE-3eR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mG7-zK-ugc" userLabel="First Responder" sceneMemberID="firstResponder"/>

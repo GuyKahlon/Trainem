@@ -11,7 +11,7 @@ import XCTest
 import EventKit
 
 class EventsTests: XCTestCase {
-
+    //todo: code review, why the cache still holds objects after cleaned
 //    var eventsCache = EventsCache()
     var calendarModel = Calendar()
     var calendar: EKCalendar?

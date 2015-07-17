@@ -11,12 +11,14 @@ import EventKitUI
 
 class CalendarViewController: UIViewController {
 
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var calendarMenuView: JTCalendarMenuView!
     @IBOutlet weak var calendarContentView: JTCalendarContentView!
     @IBOutlet weak var calendarContentViewHeight: NSLayoutConstraint!
     
     var calendarUIManager: JTCalendar
     var calendarModel: Calendar
+    var googleCalendarModelAdaptor: GoogleCalendarModelAdaptor
     
     // MARK: - life cycle
     
@@ -24,6 +26,7 @@ class CalendarViewController: UIViewController {
     {
         self.calendarUIManager = JTCalendar()
         self.calendarModel = Calendar()
+        self.googleCalendarModelAdaptor = GoogleCalendarModelAdaptor(model: self.calendarModel)
         super.init(coder: aDecoder)
         
         self.calendarModel.requestCalendarPermissionFromUserAndFetchEvents()
@@ -154,6 +157,37 @@ extension CalendarViewController: EKEventEditViewDelegate{
             
         })
     }
+}
+
+extension CalendarViewController: UITableViewDataSource{
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        //todo: this should return a month's header (image or something)
+        return UIView()
+    }
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        if var eventCell = tableView.dequeueReusableCellWithIdentifier("event cell", forIndexPath: indexPath) as? GoogleCalendarEventCell
+        {
+            eventCell.cleanBeforeReuse()
+            let event = googleCalendarModelAdaptor.eventForIndexPath(indexPath)
+            eventCell.updateEventDetails(event)
+        }
+        
+        return UITableViewCell()
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return googleCalendarModelAdaptor.numberOfActiveDaysInSection(section)
+    }
+    
+    //each month is a section
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return googleCalendarModelAdaptor.numberOfMonths()
+    }
+}
+
+extension CalendarViewController: UITableViewDelegate{
+    
 }
 
 

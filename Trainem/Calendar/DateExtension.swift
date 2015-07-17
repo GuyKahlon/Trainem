@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension NSDate {
+extension NSDate: Comparable {
     
     func startOfMonth() -> NSDate?
     {
@@ -107,4 +107,12 @@ extension NSDate {
         components.day = -1
         return calendar.dateByAddingComponents(components, toDate: self, options: nil)!
     }
+}
+
+public func <(a: NSDate, b: NSDate) -> Bool {
+    return a.compare(b) == NSComparisonResult.OrderedAscending
+}
+
+public func ==(a: NSDate, b: NSDate) -> Bool {
+    return a.compare(b) == NSComparisonResult.OrderedSame
 }

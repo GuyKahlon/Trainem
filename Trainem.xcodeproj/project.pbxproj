@@ -22,6 +22,9 @@
 		8ED15FBC1B4FADAE00B3FB55 /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF54F1B1B35DB910001A169 /* Calendar.swift */; };
 		8ED15FBD1B4FADB300B3FB55 /* EventKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E972C701B3EDD3D0047D271 /* EventKitManager.swift */; };
 		8ED15FC21B4FAF0000B3FB55 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E972C721B3EE0C00047D271 /* DateExtension.swift */; };
+		8ED15FC81B58284F00B3FB55 /* GoogleCalendarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED15FC71B58284F00B3FB55 /* GoogleCalendarModel.swift */; };
+		8ED15FCA1B582B7E00B3FB55 /* GoogleCalendarEventCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED15FC91B582B7E00B3FB55 /* GoogleCalendarEventCell.swift */; };
+		8ED15FCE1B58383200B3FB55 /* GoogleCalendarModelAdaptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED15FCD1B58383200B3FB55 /* GoogleCalendarModelAdaptor.swift */; };
 		8EF54F161B35A39D0001A169 /* CalendarStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EF54F151B35A39D0001A169 /* CalendarStoryboard.storyboard */; };
 		8EF54F1A1B35A5F40001A169 /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF54F191B35A5F40001A169 /* CalendarViewController.swift */; };
 		8EF54F1C1B35DB910001A169 /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF54F1B1B35DB910001A169 /* Calendar.swift */; };
@@ -57,6 +60,9 @@
 		8ED15FB91B4FAD2F00B3FB55 /* EventsCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsCacheTests.swift; sourceTree = "<group>"; };
 		8ED15FBF1B4FAE0100B3FB55 /* TrainemTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TrainemTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		8ED15FC41B4FAFEA00B3FB55 /* TestsPrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestsPrefixHeader.pch; sourceTree = "<group>"; };
+		8ED15FC71B58284F00B3FB55 /* GoogleCalendarModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleCalendarModel.swift; sourceTree = "<group>"; };
+		8ED15FC91B582B7E00B3FB55 /* GoogleCalendarEventCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleCalendarEventCell.swift; sourceTree = "<group>"; };
+		8ED15FCD1B58383200B3FB55 /* GoogleCalendarModelAdaptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleCalendarModelAdaptor.swift; sourceTree = "<group>"; };
 		8EF54F151B35A39D0001A169 /* CalendarStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CalendarStoryboard.storyboard; sourceTree = "<group>"; };
 		8EF54F191B35A5F40001A169 /* CalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		8EF54F1B1B35DB910001A169 /* Calendar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
@@ -166,7 +172,10 @@
 			isa = PBXGroup;
 			children = (
 				8EF54F151B35A39D0001A169 /* CalendarStoryboard.storyboard */,
+				8ED15FC71B58284F00B3FB55 /* GoogleCalendarModel.swift */,
+				8ED15FCD1B58383200B3FB55 /* GoogleCalendarModelAdaptor.swift */,
 				8EF54F191B35A5F40001A169 /* CalendarViewController.swift */,
+				8ED15FC91B582B7E00B3FB55 /* GoogleCalendarEventCell.swift */,
 				8EF54F1B1B35DB910001A169 /* Calendar.swift */,
 				8E0767AF1B3DDCD400DE673B /* EventsCache.swift */,
 				8E972C701B3EDD3D0047D271 /* EventKitManager.swift */,
@@ -313,10 +322,13 @@
 			files = (
 				8EF54F1A1B35A5F40001A169 /* CalendarViewController.swift in Sources */,
 				8E972C731B3EE0C00047D271 /* DateExtension.swift in Sources */,
+				8ED15FC81B58284F00B3FB55 /* GoogleCalendarModel.swift in Sources */,
 				8E972C711B3EDD3D0047D271 /* EventKitManager.swift in Sources */,
+				8ED15FCA1B582B7E00B3FB55 /* GoogleCalendarEventCell.swift in Sources */,
 				8E0767B01B3DDCD400DE673B /* EventsCache.swift in Sources */,
 				508CFFD31B1F703A006665F7 /* ViewController.swift in Sources */,
 				508CFFD11B1F703A006665F7 /* AppDelegate.swift in Sources */,
+				8ED15FCE1B58383200B3FB55 /* GoogleCalendarModelAdaptor.swift in Sources */,
 				8EF54F1C1B35DB910001A169 /* Calendar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
