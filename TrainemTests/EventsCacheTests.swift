@@ -10,6 +10,7 @@ import UIKit
 import XCTest
 import EventKit
 
+//note: at setup we remove all current month events from calendar, be careful with that. you need to uncomment the method removeEven....
 class EventsTests: XCTestCase {
     //todo: code review, why the cache still holds objects after cleaned
 //    var eventsCache = EventsCache()
@@ -19,6 +20,7 @@ class EventsTests: XCTestCase {
     override func setUp() {
         super.setUp()
         calendar = EventKitManager.eventStore.defaultCalendarForNewEvents
+        removeEventsFromCalendar()
         calendarModel.cleanEventsCache()
 //        eventsCache.cleanEventsCache()
     }
@@ -27,11 +29,25 @@ class EventsTests: XCTestCase {
         calendar = nil
         super.tearDown()
     }
+    
+    func removeEventsFromCalendar()
+    {
+//        if var eventList = calendarModel.fetchCurrentMonthEvents(){
+//            for event in eventList
+//            {
+//                var success = EventKitManager.eventStore.removeEvent(event, span: EKSpanThisEvent, commit: true, error: nil)
+//                println(success)
+//            }
+//        }
+    }
 
     //todo: code review - problem with asynchronous method returns
     func testUnCacheEvent() {
         
         let expectation = expectationWithDescription("all methods are done")
+        waitForExpectationsWithTimeout(5, handler: { (error) -> Void in
+            println(error)
+        })
         
         var event = EKEvent(eventStore: EventKitManager.eventStore)
         event.calendar = EventKitManager.eventStore.defaultCalendarForNewEvents
@@ -85,6 +101,9 @@ class EventsTests: XCTestCase {
         XCTAssert(initialCachedEvents.count == 0, "events cache is not clean as a preliminary for this test")
         
         let expectation = expectationWithDescription("all methods are done")
+        waitForExpectationsWithTimeout(5, handler: { (error) -> Void in
+            println(error)
+        })
         
         var event = EKEvent(eventStore: EventKitManager.eventStore)
         event.calendar = EventKitManager.eventStore.defaultCalendarForNewEvents

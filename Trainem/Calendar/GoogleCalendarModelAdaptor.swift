@@ -45,9 +45,13 @@ class GoogleCalendarModelAdaptor {
             model = addEventToEventsModel(event, eventsModel: model)
         }
         
-        for (_ , var monthlyEvents) in model
+        for (key , var monthlyEvents) in model
         {
-            sort(&monthlyEvents, { $0.startDate < $1.startDate })
+            sort(&monthlyEvents, {
+                $0.startDate < $1.startDate
+            })
+            
+            model[key] = monthlyEvents
         }
         
         return model

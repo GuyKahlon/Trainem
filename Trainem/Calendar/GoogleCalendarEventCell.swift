@@ -26,11 +26,13 @@ class GoogleCalendarEventCell: UITableViewCell {
 
     func cleanBeforeReuse()
     {
-        //todo: implement
+        eventTitleLabel.text = nil
+        eventTimeLabel.text = nil
     }
     
     func updateEventDetails(event: EKEvent)
     {
-        
+        eventTitleLabel.text = event.title
+        eventTimeLabel.text = event.startDate.description
     }
 }
