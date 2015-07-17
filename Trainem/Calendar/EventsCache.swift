@@ -52,34 +52,34 @@ class EventsCache: NSObject {
     */
     func cacheEvents(# fromDate: NSDate, toDate: NSDate, events: [EKEvent], completionBlock: CacheNewEventsBlock? = nil)
     {
-        serialCachingOperationQueue.addOperationWithBlock { () -> Void in
-            let dateAndEventArray = events.map{ (var event: EKEvent) -> (NSDate, EKEvent) in
-                let eventDate = event.startDate
-                let eventDateWithoutTime = eventDate.dateWithOutTimeOfDay()
-                return (eventDateWithoutTime, event)
+        //todo: code review - maybe refactor all this class to async methods
+//        serialCachingOperationQueue.addOperationWithBlock { () -> Void in
+        let dateAndEventArray = events.map{ (var event: EKEvent) -> (NSDate, EKEvent) in
+            let eventDate = event.startDate
+            let eventDateWithoutTime = eventDate.dateWithOutTimeOfDay()
+            return (eventDateWithoutTime, event)
+        }
+        
+        for dateAndEvent in dateAndEventArray
+        {
+            let (date, event) = dateAndEvent
+            if EventsCache.cache.objectForKey(date) == nil
+            {
+                EventsCache.cache.setObject(Set<EKEvent>(), forKey: date)
             }
             
-            for dateAndEvent in dateAndEventArray
+            if var events = EventsCache.cache.objectForKey(date) as? Set<EKEvent>
             {
-                let (date, event) = dateAndEvent
-                if EventsCache.cache.objectForKey(date) == nil
-                {
-                    EventsCache.cache.setObject(Set<EKEvent>(), forKey: date)
-                }
-                
-                if var events = EventsCache.cache.objectForKey(date) as? Set<EKEvent>
-                {
-                    events.insert(event)
-                    EventsCache.cache.setObject(events, forKey: date)
-                }
-                
-                self.updateFirstAndLastCachedDates(startDate: fromDate, endDate: toDate)
+                events.insert(event)
+                EventsCache.cache.setObject(events, forKey: date)
             }
             
-            if let completionBlock = completionBlock
-            {
-                completionBlock(newCachedEvents: events, error: nil)
-            }
+            self.updateFirstAndLastCachedDates(startDate: fromDate, endDate: toDate)
+        }
+        
+        if let completionBlock = completionBlock
+        {
+            completionBlock(newCachedEvents: events, error: nil)
         }
     }
     
@@ -106,7 +106,6 @@ class EventsCache: NSObject {
     //update the cached range if and only if the new range is overlapping or containing current cached date range
     func updateFirstAndLastCachedDates(# startDate: NSDate, endDate: NSDate)
     {
-        //todo: add NSCacheDelegate to control the firstCachedDate and last in case something is removed from cache
         if firstCachedDate == nil
         {
             firstCachedDate = startDate
@@ -131,7 +130,6 @@ class EventsCache: NSObject {
     
     func cachedEvents(# fromDate: NSDate, toDate: NSDate)->Set<EKEvent>
     {
-//        reteiveCacheOperationQueue.add
         let toDate = toDate.dateWithOutTimeOfDay()
         var cachedEvents = Set<EKEvent>()
         let fromDateWithoutTime = fromDate.dateWithOutTimeOfDay()
