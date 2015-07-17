@@ -90,14 +90,16 @@ class GoogleCalendarModelAdaptor {
         return 0
     }
     
-    private func monthDateForSection(section: Int) -> NSDate
-    {
-        //todo:
-        return NSDate()
-    }
-    
     func eventForIndexPath(indexPath: NSIndexPath) -> EKEvent
     {
-        return EKEvent()
+        let monthForIndexPath = monthDateForSection(indexPath.section)
+        let eventsForMonth = self.eventsModel[monthForIndexPath]!
+        let event = eventsForMonth[indexPath.row]
+        return event
+    }
+    
+    private func monthDateForSection(section: Int) -> NSDate
+    {
+        return Array(self.eventsModel.keys).sorted({ $0 < $1 })[section]
     }
 }
