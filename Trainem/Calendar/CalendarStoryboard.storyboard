@@ -71,43 +71,91 @@
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="D5d-Ce-kSo" id="Dpl-vL-Nit">
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3SC-KD-bw3" userLabel="Event View">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MvI-o2-qm3" userLabel="Event View">
                                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.25000000000000006" translatesAutoresizingMaskIntoConstraints="NO" id="hn1-ic-XBL" userLabel="time label">
-                                                                    <rect key="frame" x="20" y="21" width="560" height="22.5"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3SC-KD-bw3" userLabel="Event Details">
+                                                                    <rect key="frame" x="90" y="0.0" width="510" height="43.5"/>
+                                                                    <subviews>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="8hR-1A-rvG" userLabel="title label">
+                                                                            <rect key="frame" x="20" y="0.0" width="470" height="22"/>
+                                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                            <nil key="highlightedColor"/>
+                                                                        </label>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.25000000000000006" translatesAutoresizingMaskIntoConstraints="NO" id="hn1-ic-XBL" userLabel="time label">
+                                                                            <rect key="frame" x="20" y="22" width="470" height="21.5"/>
+                                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                            <nil key="highlightedColor"/>
+                                                                        </label>
+                                                                    </subviews>
+                                                                    <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <constraints>
+                                                                        <constraint firstItem="8hR-1A-rvG" firstAttribute="leading" secondItem="3SC-KD-bw3" secondAttribute="leading" constant="20" symbolic="YES" id="3nK-x8-RpX"/>
+                                                                        <constraint firstItem="8hR-1A-rvG" firstAttribute="top" secondItem="3SC-KD-bw3" secondAttribute="top" id="6dF-dY-ByG"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="hn1-ic-XBL" secondAttribute="trailing" constant="20" symbolic="YES" id="C0I-nw-F1Q"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="hn1-ic-XBL" secondAttribute="bottom" id="PMk-c2-uPW"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="8hR-1A-rvG" secondAttribute="trailing" constant="20" symbolic="YES" id="Rdl-OI-szM"/>
+                                                                        <constraint firstItem="hn1-ic-XBL" firstAttribute="top" secondItem="8hR-1A-rvG" secondAttribute="bottom" id="e6Z-O4-BnF"/>
+                                                                        <constraint firstItem="8hR-1A-rvG" firstAttribute="height" secondItem="3SC-KD-bw3" secondAttribute="height" multiplier="0.5" id="eml-Vf-X2d"/>
+                                                                        <constraint firstItem="hn1-ic-XBL" firstAttribute="leading" secondItem="3SC-KD-bw3" secondAttribute="leading" constant="20" symbolic="YES" id="rQc-g9-LBT"/>
+                                                                    </constraints>
+                                                                </view>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H0H-eU-Rzv" userLabel="day in month">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="90" height="22"/>
+                                                                    <attributedString key="attributedText">
+                                                                        <fragment content="Date">
+                                                                            <attributes>
+                                                                                <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                                <font key="NSFont" size="17" name="HelveticaNeue"/>
+                                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                            </attributes>
+                                                                        </fragment>
+                                                                    </attributedString>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="8hR-1A-rvG" userLabel="title label">
-                                                                    <rect key="frame" x="20" y="0.0" width="560" height="21"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8gu-SQ-vJO" userLabel="day in week">
+                                                                    <rect key="frame" x="0.0" y="22" width="90" height="21"/>
+                                                                    <attributedString key="attributedText">
+                                                                        <fragment content="Day">
+                                                                            <attributes>
+                                                                                <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                                <font key="NSFont" size="14" name="HelveticaNeue"/>
+                                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                            </attributes>
+                                                                        </fragment>
+                                                                    </attributedString>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                             </subviews>
-                                                            <color key="backgroundColor" red="0.5" green="0.0" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstItem="8hR-1A-rvG" firstAttribute="leading" secondItem="3SC-KD-bw3" secondAttribute="leading" constant="20" symbolic="YES" id="3nK-x8-RpX"/>
-                                                                <constraint firstItem="8hR-1A-rvG" firstAttribute="top" secondItem="3SC-KD-bw3" secondAttribute="top" id="6dF-dY-ByG"/>
-                                                                <constraint firstAttribute="trailing" secondItem="hn1-ic-XBL" secondAttribute="trailing" constant="20" symbolic="YES" id="C0I-nw-F1Q"/>
-                                                                <constraint firstAttribute="bottom" secondItem="hn1-ic-XBL" secondAttribute="bottom" id="PMk-c2-uPW"/>
-                                                                <constraint firstAttribute="trailing" secondItem="8hR-1A-rvG" secondAttribute="trailing" constant="20" symbolic="YES" id="Rdl-OI-szM"/>
-                                                                <constraint firstItem="hn1-ic-XBL" firstAttribute="top" secondItem="8hR-1A-rvG" secondAttribute="bottom" id="e6Z-O4-BnF"/>
-                                                                <constraint firstItem="8hR-1A-rvG" firstAttribute="height" secondItem="3SC-KD-bw3" secondAttribute="height" multiplier="0.5" id="eml-Vf-X2d"/>
-                                                                <constraint firstItem="hn1-ic-XBL" firstAttribute="leading" secondItem="3SC-KD-bw3" secondAttribute="leading" constant="20" symbolic="YES" id="rQc-g9-LBT"/>
+                                                                <constraint firstItem="8gu-SQ-vJO" firstAttribute="leading" secondItem="MvI-o2-qm3" secondAttribute="leading" id="17u-JT-k4u"/>
+                                                                <constraint firstItem="H0H-eU-Rzv" firstAttribute="top" secondItem="MvI-o2-qm3" secondAttribute="top" id="1Yr-JO-NTx"/>
+                                                                <constraint firstItem="3SC-KD-bw3" firstAttribute="width" secondItem="MvI-o2-qm3" secondAttribute="width" multiplier="0.85" id="8BA-9n-Ijx"/>
+                                                                <constraint firstAttribute="trailing" secondItem="3SC-KD-bw3" secondAttribute="trailing" id="Agn-Zh-Qng"/>
+                                                                <constraint firstAttribute="bottom" secondItem="3SC-KD-bw3" secondAttribute="bottom" id="FU3-rG-iXS"/>
+                                                                <constraint firstItem="3SC-KD-bw3" firstAttribute="leading" secondItem="8gu-SQ-vJO" secondAttribute="trailing" id="HAl-hd-wD5"/>
+                                                                <constraint firstItem="H0H-eU-Rzv" firstAttribute="leading" secondItem="MvI-o2-qm3" secondAttribute="leading" id="VVk-2p-pnJ"/>
+                                                                <constraint firstItem="8gu-SQ-vJO" firstAttribute="top" secondItem="H0H-eU-Rzv" secondAttribute="bottom" id="aDf-6O-led"/>
+                                                                <constraint firstItem="3SC-KD-bw3" firstAttribute="top" secondItem="MvI-o2-qm3" secondAttribute="top" id="cUG-1s-DsL"/>
+                                                                <constraint firstItem="3SC-KD-bw3" firstAttribute="leading" secondItem="H0H-eU-Rzv" secondAttribute="trailing" id="qxC-Qj-Zoe"/>
+                                                                <constraint firstItem="H0H-eU-Rzv" firstAttribute="height" secondItem="MvI-o2-qm3" secondAttribute="height" multiplier="0.5" id="rHd-Y8-paB"/>
+                                                                <constraint firstAttribute="bottom" secondItem="8gu-SQ-vJO" secondAttribute="bottom" id="vRI-Y3-qaV"/>
                                                             </constraints>
                                                         </view>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstItem="3SC-KD-bw3" firstAttribute="top" secondItem="Dpl-vL-Nit" secondAttribute="top" id="5O5-vL-DNC"/>
-                                                        <constraint firstAttribute="bottom" secondItem="3SC-KD-bw3" secondAttribute="bottom" id="6Su-LH-PAM"/>
-                                                        <constraint firstAttribute="trailing" secondItem="3SC-KD-bw3" secondAttribute="trailing" id="NTn-LR-gOC"/>
-                                                        <constraint firstItem="3SC-KD-bw3" firstAttribute="leading" secondItem="Dpl-vL-Nit" secondAttribute="leading" id="hDg-TD-lTA"/>
+                                                        <constraint firstAttribute="trailing" secondItem="MvI-o2-qm3" secondAttribute="trailing" id="Gng-yF-BRq"/>
+                                                        <constraint firstItem="MvI-o2-qm3" firstAttribute="leading" secondItem="Dpl-vL-Nit" secondAttribute="leading" id="PDK-8c-idO"/>
+                                                        <constraint firstAttribute="bottom" secondItem="MvI-o2-qm3" secondAttribute="bottom" id="daJ-ym-8ss"/>
+                                                        <constraint firstItem="MvI-o2-qm3" firstAttribute="top" secondItem="Dpl-vL-Nit" secondAttribute="top" id="p0P-1D-Jhe"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
                                                 <connections>
+                                                    <outlet property="dayInMonthLabel" destination="H0H-eU-Rzv" id="cDq-4d-1Nn"/>
+                                                    <outlet property="dayInWeekLabel" destination="8gu-SQ-vJO" id="qd2-wg-hIg"/>
                                                     <outlet property="eventTimeLabel" destination="hn1-ic-XBL" id="tai-fC-1nP"/>
                                                     <outlet property="eventTitleLabel" destination="8hR-1A-rvG" id="gl6-XY-6uL"/>
                                                 </connections>

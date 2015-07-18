@@ -13,6 +13,9 @@ class GoogleCalendarEventCell: UITableViewCell {
 
     @IBOutlet weak var eventTitleLabel: UILabel!
     @IBOutlet weak var eventTimeLabel: UILabel!
+    @IBOutlet weak var dayInMonthLabel: UILabel!
+    @IBOutlet weak var dayInWeekLabel: UILabel!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -34,5 +37,7 @@ class GoogleCalendarEventCell: UITableViewCell {
     {
         eventTitleLabel.text = event.title
         eventTimeLabel.text = event.startDate.description
+        dayInMonthLabel.attributedText = NSAttributedString(string: event.startDate.dayInMonth().description)
+        dayInWeekLabel.attributedText = NSAttributedString(string: event.startDate.threeLetterDayInWeekString())
     }
 }

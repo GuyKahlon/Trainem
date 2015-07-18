@@ -107,6 +107,27 @@ extension NSDate: Comparable {
         components.day = -1
         return calendar.dateByAddingComponents(components, toDate: self, options: nil)!
     }
+    
+    func threeLetterMonthString() -> String
+    {
+        var dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "MMM"
+        return dateFormatter.stringFromDate(self)
+    }
+    
+    func threeLetterDayInWeekString() -> String
+    {
+        var dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "EEE"
+        return dateFormatter.stringFromDate(self)
+    }
+    
+    func dayInMonth() -> Int
+    {
+        let calendar = NSCalendar.currentCalendar()
+        let components = calendar.components(.CalendarUnitDay, fromDate: self)
+        return components.day
+    }
 }
 
 public func <(a: NSDate, b: NSDate) -> Bool {
