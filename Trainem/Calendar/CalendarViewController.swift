@@ -195,6 +195,16 @@ extension CalendarViewController: UITableViewDelegate{
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView)
     {
+        updateCalendarUI(scrollView)
+    }
+    
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool)
+    {
+        updateCalendarUI(scrollView)
+    }
+    
+    private func updateCalendarUI(scrollView: UIScrollView)
+    {
         if let table = scrollView as? UITableView
         {
             if let visibleIndexPaths = table.indexPathsForVisibleRows() as? [NSIndexPath]
@@ -202,7 +212,9 @@ extension CalendarViewController: UITableViewDelegate{
                 let middleIndexPath = googleCalendarModelAdaptor.middleIndexPath(visibleIndexPaths)
                 let middleEvent = googleCalendarModelAdaptor.eventForIndexPath(middleIndexPath)
                 self.calendarUIManager.currentDateSelected = middleEvent.startDate
+                self.calendarUIManager.currentDate = middleEvent.startDate
                 self.calendarUIManager.reloadData()
+                self.calendarUIManager.reloadAppearance()
             }
             
         }
