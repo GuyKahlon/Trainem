@@ -165,6 +165,7 @@ extension CalendarViewController: UITableViewDataSource{
         //todo: this should return a month's header (image or something)
         return UIView()
     }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if var eventCell = tableView.dequeueReusableCellWithIdentifier("event cell", forIndexPath: indexPath) as? GoogleCalendarEventCell
         {
@@ -172,6 +173,7 @@ extension CalendarViewController: UITableViewDataSource{
             let event = googleCalendarModelAdaptor.eventForIndexPath(indexPath)
             let hideEventDateOnCell = googleCalendarModelAdaptor.shouldHideDateOnEvent(event, atIndexPath: indexPath)
             eventCell.updateEventDetails(event, hideDate: hideEventDateOnCell)
+            return eventCell
         }
         
         return UITableViewCell()
