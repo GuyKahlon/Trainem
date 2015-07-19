@@ -30,13 +30,14 @@ class CalendarViewController: UIViewController {
         super.init(coder: aDecoder)
         
         self.calendarModel.requestCalendarPermissionFromUserAndFetchEvents()
-        
+        self.calendarUIManager.delegate = self
     }
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
+        scrollGoogleCalendarToDate(NSDate(), animated: false)
         setUpCalendarUI()
     }
     
@@ -56,11 +57,19 @@ class CalendarViewController: UIViewController {
         calendarUIManager.dataSource = self
     }
     
+    private func scrollGoogleCalendarToDate(date: NSDate, animated: Bool)
+    {
+        let indexPath = googleCalendarModelAdaptor.indexPathForDate(date)
+        tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Middle, animated: animated)
+        tableView.reloadData()
+    }
+    
     // MARK: - bottuns callback
     
     @IBAction func todayButtonAction(sender: AnyObject)
     {
-        calendarUIManager.currentDate = NSDate()
+        scrollGoogleCalendarToDate(NSDate(), animated: true)
+        calendarUIShowDate(NSDate())
     }
     
     @IBAction func changeModeAction(sender: AnyObject)
@@ -136,9 +145,7 @@ extension CalendarViewController: JTCalendarDataSource{
     
     func calendarDidDateSelected(calendar: JTCalendar!, date: NSDate!)
     {
-        let indexPath = googleCalendarModelAdaptor.indexPathForDate(date)
-        tableView.reloadData()
-        tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Middle, animated: true)
+        scrollGoogleCalendarToDate(date, animated: true)
     }
 }
 
@@ -193,17 +200,18 @@ extension CalendarViewController: UITableViewDataSource{
 
 extension CalendarViewController: UITableViewDelegate{
     
+    //todo: maybe needs to make it more efficient because it gets a little stuck when dragging between months
     func scrollViewDidEndDecelerating(scrollView: UIScrollView)
     {
-        updateCalendarUI(scrollView)
+        updateGoogleCalendarUI(scrollView)
     }
     
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool)
     {
-        updateCalendarUI(scrollView)
+        updateGoogleCalendarUI(scrollView)
     }
     
-    private func updateCalendarUI(scrollView: UIScrollView)
+    private func updateGoogleCalendarUI(scrollView: UIScrollView)
     {
         if let table = scrollView as? UITableView
         {
@@ -211,13 +219,25 @@ extension CalendarViewController: UITableViewDelegate{
             {
                 let middleIndexPath = googleCalendarModelAdaptor.middleIndexPath(visibleIndexPaths)
                 let middleEvent = googleCalendarModelAdaptor.eventForIndexPath(middleIndexPath)
-                self.calendarUIManager.currentDateSelected = middleEvent.startDate
-                self.calendarUIManager.currentDate = middleEvent.startDate
-                self.calendarUIManager.reloadData()
-                self.calendarUIManager.reloadAppearance()
+                calendarUIShowDate(middleEvent.startDate)
             }
-            
         }
+    }
+    
+    private func calendarUIShowDate(date: NSDate)
+    {
+        self.calendarUIManager.currentDateSelected = date
+        self.calendarUIManager.currentDate = date
+        self.calendarUIManager.reloadData()
+        self.calendarUIManager.reloadAppearance()
+    }
+}
+
+extension CalendarViewController: JTCalendarDelegate{
+    
+    func dateHasUpdatedWithDate(date: NSDate!)
+    {
+        scrollGoogleCalendarToDate(date, animated: true)
     }
 }
 
