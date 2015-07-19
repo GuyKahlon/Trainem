@@ -18,7 +18,9 @@ class GoogleCalendarEventCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        
+        dayInWeekLabel.hidden = true
+        dayInMonthLabel.hidden = true
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
@@ -31,13 +33,23 @@ class GoogleCalendarEventCell: UITableViewCell {
     {
         eventTitleLabel.text = nil
         eventTimeLabel.text = nil
+        
+        dayInWeekLabel.hidden = true
+        dayInMonthLabel.hidden = true
     }
     
-    func updateEventDetails(event: EKEvent)
+    func updateEventDetails(event: EKEvent, hideDate: Bool)
     {
         eventTitleLabel.text = event.title
         eventTimeLabel.text = event.startDate.description
-        dayInMonthLabel.attributedText = NSAttributedString(string: event.startDate.dayInMonth().description)
-        dayInWeekLabel.attributedText = NSAttributedString(string: event.startDate.threeLetterDayInWeekString())
+        
+        if hideDate == false
+        {
+            dayInMonthLabel.attributedText = NSAttributedString(string: event.startDate.dayInMonth().description)
+            dayInMonthLabel.hidden = false
+            dayInWeekLabel.attributedText = NSAttributedString(string: event.startDate.threeLetterDayInWeekString())
+            dayInWeekLabel.hidden = false
+        }
+        
     }
 }

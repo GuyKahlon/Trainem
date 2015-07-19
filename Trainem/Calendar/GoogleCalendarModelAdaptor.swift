@@ -106,4 +106,22 @@ class GoogleCalendarModelAdaptor {
     {
         return Array(self.eventsModel.keys).sorted({ $0 < $1 })[section]
     }
+    
+    func shouldHideDateOnEvent(event: EKEvent, atIndexPath indexPath: NSIndexPath) -> Bool
+    {
+        if indexPath.row == 0 // first event for month
+        {
+            return false
+        }
+        
+        let previousEventIndexPath = NSIndexPath(forRow: indexPath.row - 1, inSection: indexPath.section)
+        let previousEvent = eventForIndexPath(previousEventIndexPath)
+        return event.startDate.isOnTheSameDayAs(previousEvent.startDate)
+    }
 }
+
+
+
+
+
+

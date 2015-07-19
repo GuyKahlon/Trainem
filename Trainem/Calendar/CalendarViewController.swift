@@ -170,7 +170,8 @@ extension CalendarViewController: UITableViewDataSource{
         {
             eventCell.cleanBeforeReuse()
             let event = googleCalendarModelAdaptor.eventForIndexPath(indexPath)
-            eventCell.updateEventDetails(event)
+            let hideEventDateOnCell = googleCalendarModelAdaptor.shouldHideDateOnEvent(event, atIndexPath: indexPath)
+            eventCell.updateEventDetails(event, hideDate: hideEventDateOnCell)
         }
         
         return UITableViewCell()

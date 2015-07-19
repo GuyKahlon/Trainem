@@ -17,7 +17,7 @@ extension NSDate: Comparable {
         return startOfMonth
     }
     
-    func isDateOnTheSameDay(otherDate: NSDate)->Bool
+    func isOnTheSameDayAs(otherDate: NSDate)->Bool
     {
         return NSCalendar.currentCalendar().isDate(self, inSameDayAsDate: otherDate)
     }
