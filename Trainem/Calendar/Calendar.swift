@@ -75,13 +75,14 @@ class Calendar: NSObject {//todo: move work to background threads
         //todo: it's a synchronized method!
         var events = EventKitManager.eventStore.eventsMatchingPredicate(predicate) //event array is not necessarily ordered
         
-        if let fetchedEvents = events  as? [EKEvent]
+        if let fetchedEvents = events  as? [EKEvent] where fetchedEvents.count > 0
         {
             //todo: consider replacing forced unwrapping
             cacheEvents(fromDate: fetchAndCacheStartDate!, toDate: fetchAndCacheToDate!, events: fetchedEvents)
             return eventsCache.cachedEvents(fromDate: fromDate, toDate: toDate)
         }
         
+        //required in case there are no events on those dates. we still want to update the cache range to prevent unneeded work
         eventsCache.updateFirstAndLastCachedDates(startDate: fetchAndCacheStartDate!, endDate: fetchAndCacheToDate!)
         return nil
     }

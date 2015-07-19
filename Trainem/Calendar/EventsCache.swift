@@ -116,12 +116,12 @@ class EventsCache: NSObject {
             lastCachedDate = endDate
         }
         //the 2 hour comparison is for 2 reasons: day light savings causes a 1 hour gap, endDate is on 23:59 and start date is on 00:00
-        if startDate.isLessThanDate(firstCachedDate!) && !endDate.isLessThanDateByMoreThanTwoHours(firstCachedDate!)
+        if startDate.isLessThanDate(firstCachedDate!) && !endDate.isLessThanDate(firstCachedDate!)
         {
             firstCachedDate = startDate
         }
         
-        if endDate.isGreaterThanDate(lastCachedDate!) && !startDate.isGreaterThanDateByMoreThanTwoHours(lastCachedDate!)
+        if endDate.isGreaterThanDate(lastCachedDate!) && !startDate.isGreaterThanDate(lastCachedDate!)
         {
             lastCachedDate = endDate
         }
@@ -142,6 +142,7 @@ class EventsCache: NSObject {
             if date.isGreaterThanDate(toDate)
             {
                 stop.memory = true
+                return
             }
             
             if let cachedEventsForDate = EventsCache.cache.objectForKey(date) as? Set<EKEvent>
