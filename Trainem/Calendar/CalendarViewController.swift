@@ -119,13 +119,28 @@ class CalendarViewController: UIViewController {
     
     private func saveEvent(event: EKEvent)
     {
-        calendarModel.saveEventToCalendar(title: event.title, startDate: event.startDate, endDate: event.endDate, location: event.location)
-        calendarUIManager.reloadData()
+        calendarModel.saveEventToCalendar(title: event.title, startDate: event.startDate, endDate: event.endDate, location: event.location) { (savedEvent, error) -> () in
+            
+            if error == nil
+            {
+                self.googleCalendarModelAdaptor.saveNewEvent(event)
+                self.calendarUIManager.reloadData()
+                self.tableView.reloadData()
+            }
+        }
     }
     
     private func deleteEvent(event: EKEvent)
     {
-        calendarModel.removeEventFromCalendar(event)
+        calendarModel.removeEventFromCalendar(event, completionBlock: { (removedEvent, error) -> () in
+            
+            if error == nil
+            {
+                self.googleCalendarModelAdaptor.removeEvent(event)
+                self.calendarUIManager.reloadData()
+                self.tableView.reloadData()
+            }
+        })
     }
 }
 

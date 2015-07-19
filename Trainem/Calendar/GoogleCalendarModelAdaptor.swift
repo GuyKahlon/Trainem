@@ -230,6 +230,37 @@ class GoogleCalendarModelAdaptor {
         return nil
     }
     
+    func saveNewEvent(event: EKEvent)
+    {
+        let eventDate = event.startDate
+        let keyForNewEvent = eventsModelKeyForDate(eventDate)
+        if var currentEvents = eventsModel[keyForNewEvent]
+        {
+            currentEvents.append(event)
+            currentEvents.sort{ $0.startDate < $1.startDate }
+            eventsModel[keyForNewEvent] = currentEvents
+            
+            return
+        }
+        
+        eventsModel[keyForNewEvent] = [event]
+    }
+    
+    func removeEvent(event: EKEvent)
+    {
+        let eventDate = event.startDate
+        let keyForNewEvent = eventsModelKeyForDate(eventDate)
+        if var currentEvents = eventsModel[keyForNewEvent]
+        {
+            if let index = find(currentEvents, event)
+            {
+                currentEvents.removeAtIndex(index)
+                currentEvents.sort{ $0.startDate < $1.startDate }
+                eventsModel[keyForNewEvent] = currentEvents
+            }
+        }
+    }
+    
     //this update is forced, i.e. it assumes that a month key, if exists in eventsModel is no longer valid and replaced it with the new one given as part of the function argument
     private func updateEventsModelWithEvents(events: [NSDate : [EKEvent]])
     {
