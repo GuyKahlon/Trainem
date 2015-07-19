@@ -156,6 +156,7 @@ class GoogleCalendarModelAdaptor {
                 updateEventsModelWithEvents(events)
             }
         }
+        
         return nearestIndexPathForDate(date)
     }
     
@@ -172,7 +173,7 @@ class GoogleCalendarModelAdaptor {
         else
         {
             let monthDate = monthDateForSection(monthSection)
-            eventRow = eventsModel[monthDate]!.count
+            eventRow = eventsModel[monthDate]!.count - 1
         }
         
         return NSIndexPath(forRow: eventRow, inSection: monthSection)
