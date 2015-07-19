@@ -124,6 +124,22 @@ class GoogleCalendarModelAdaptor {
         let middleIndex = indexPaths.count / 2
         return indexPaths[middleIndex]
     }
+    
+    func indexPathForDate(date: NSDate)
+    {
+        if isDateLoaded(date)
+        {
+            
+            return
+        }
+        
+        
+    }
+    
+    private func isDateLoaded(date: NSDate) -> Bool
+    {
+        
+    }
 }
 
 

@@ -136,7 +136,8 @@ extension CalendarViewController: JTCalendarDataSource{
     
     func calendarDidDateSelected(calendar: JTCalendar!, date: NSDate!)
     {
-        //todo: implement
+        let indexPath = googleCalendarModelAdaptor.indexPathForDate(date)
+        tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Middle, animated: true)
     }
 }
 
