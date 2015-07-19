@@ -118,6 +118,12 @@ class GoogleCalendarModelAdaptor {
         let previousEvent = eventForIndexPath(previousEventIndexPath)
         return event.startDate.isOnTheSameDayAs(previousEvent.startDate)
     }
+    
+    func middleIndexPath(indexPaths: [NSIndexPath]) -> NSIndexPath
+    {
+        let middleIndex = indexPaths.count / 2
+        return indexPaths[middleIndex]
+    }
 }
 
 

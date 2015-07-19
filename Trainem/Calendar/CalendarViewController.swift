@@ -191,6 +191,20 @@ extension CalendarViewController: UITableViewDataSource{
 
 extension CalendarViewController: UITableViewDelegate{
     
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView)
+    {
+        if let table = scrollView as? UITableView
+        {
+            if let visibleIndexPaths = table.indexPathsForVisibleRows() as? [NSIndexPath]
+            {
+                let middleIndexPath = googleCalendarModelAdaptor.middleIndexPath(visibleIndexPaths)
+                let middleEvent = googleCalendarModelAdaptor.eventForIndexPath(middleIndexPath)
+                self.calendarUIManager.currentDateSelected = middleEvent.startDate
+                self.calendarUIManager.reloadData()
+            }
+            
+        }
+    }
 }
 
 
