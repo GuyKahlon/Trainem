@@ -9,6 +9,9 @@
 import Foundation
 import EventKit
 
+protocol GoogleCalendarModelAdaptorDelegate{
+    func modelHasUpdated()
+}
 /* 
     this is a GoogleCalendarModel adapter to be used by a table view controller
     the model is a dictionary with NSDate as keys that represent a whole month. that date would be
@@ -17,6 +20,7 @@ import EventKit
 class GoogleCalendarModelAdaptor {
     
     private let model: Calendar
+    var delegate: GoogleCalendarModelAdaptorDelegate?
     
     //events model keys are NSDate that represent a month, and values are all events on that month
     private var eventsModel = [NSDate : [EKEvent]]()
@@ -24,49 +28,62 @@ class GoogleCalendarModelAdaptor {
     init(model: Calendar)
     {
         self.model = model
-        eventsModel = constructModel()
+        instantiateEventsModel()
     }
     
-    private func constructModel() -> [NSDate : [EKEvent]]
+    func instantiateEventsModel()
     {
-        if let events = monthlyEventsForDate(NSDate())
-        {
-            return events
-        }
-        
-        return [NSDate : [EKEvent]]()
+        monthlyEventsForDate(NSDate(), completionBlock: { (fetchedEvents, error) in
+            if let fetchedEvents = fetchedEvents
+            {
+                self.eventsModel = self.constructModelFromEvents(fetchedEvents)
+                
+                if let delegate = self.delegate
+                {
+                    delegate.modelHasUpdated()
+                }
+            }
+        })
     }
     
-    //returns a model with given date's month
-    private func monthlyEventsForDate(date: NSDate) -> [NSDate : [EKEvent]]?
+    //returns a model with given date's month if one is cached or executes the completion block after fetching uncached events
+    private func monthlyEventsForDate(date: NSDate, completionBlock: FetchEventsBlock)
     {
         if let startOfMonth = date.startOfMonth(), endOfMonth = date.endOfMonth()
         {
-            if let monthEvents = model.fetchEvents(fromDate: startOfMonth, toDate: endOfMonth)
+            if model.dateRangeIsCached(fromDate: startOfMonth, toDate: endOfMonth)
             {
-                let allEvents = Array(monthEvents)
-                var model = [NSDate : [EKEvent]]()
-                
-                for event in allEvents
-                {
-                    model = addEventToEventsModel(event, eventsModel: model)
-                }
-                
-                //sorting
-                for (key , var monthlyEvents) in model
-                {
-                    sort(&monthlyEvents, {
-                        $0.startDate < $1.startDate
-                    })
-                    
-                    model[key] = monthlyEvents
-                }
-                
-                return model
+                let monthlyEvents = model.cachedEvents(fromDate: startOfMonth, toDate: endOfMonth)
+                completionBlock(fetchedEvents: monthlyEvents, error: nil)
+                return
             }
+            
+            model.fetchEvents(fromDate: startOfMonth, toDate: endOfMonth, completionBlock: completionBlock)
+        }
+    }
+    
+    //changes the data structure to one that is appropriate to serve as class model
+    func constructModelFromEvents(events: Set<EKEvent>) -> [NSDate : [EKEvent]]
+    {
+        let allEvents = Array(events)
+        var model = [NSDate : [EKEvent]]()
+        
+        for event in allEvents
+        {
+            model = addEventToEventsModel(event, eventsModel: model)
         }
         
-        return nil
+        //sorting
+        for (key , var eventsForKey) in model
+        {
+            sort(&eventsForKey, {
+                $0.startDate < $1.startDate
+            })
+            
+            model[key] = eventsForKey
+        }
+        
+        return model
     }
     
     private func addEventToEventsModel(event: EKEvent, var eventsModel: [NSDate : [EKEvent]]) -> [NSDate : [EKEvent]]
@@ -147,14 +164,39 @@ class GoogleCalendarModelAdaptor {
         return indexPaths[middleIndex]
     }
     
+    //load dates in a month batch
+    func loadDate(date: NSDate, block: FetchEventsBlock)
+    {
+        if !isDateLoaded(date)
+        {
+            monthlyEventsForDate(date, completionBlock: { (fetchedEvents, error) -> () in
+                if let fetchedEvents = fetchedEvents where fetchedEvents.count > 0
+                {
+                    let fetchedEventsModel = self.constructModelFromEvents(fetchedEvents)
+                    self.updateEventsModelWithEvents(fetchedEventsModel)
+                }
+                
+                block(fetchedEvents: fetchedEvents, error: nil)
+            })
+            return
+        }
+        
+        block(fetchedEvents: nil, error: nil)
+    }
+    
     func indexPathForDate(date: NSDate) -> NSIndexPath
     {
         if !isDateLoaded(date)
         {
-            if let events = monthlyEventsForDate(date)
-            {
-                updateEventsModelWithEvents(events)
-            }
+            monthlyEventsForDate(date, completionBlock: { (fetchedEvents, error) in
+                
+                if let fetchedEvents = fetchedEvents
+                {
+                    self.updateEventsModelWithEvents(self.constructModelFromEvents(fetchedEvents))
+                }
+                
+                //todo: log error
+            })
         }
         
         return nearestIndexPathForDate(date)
@@ -270,7 +312,7 @@ class GoogleCalendarModelAdaptor {
         }
     }
     
-    private func isDateLoaded(date: NSDate) -> Bool
+    func isDateLoaded(date: NSDate) -> Bool
     {
         return eventsModel[eventsModelKeyForDate(date)] != nil
     }

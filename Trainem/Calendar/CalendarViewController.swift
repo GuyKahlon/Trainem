@@ -24,13 +24,14 @@ class CalendarViewController: UIViewController {
     
     required init(coder aDecoder: NSCoder)
     {
-        self.calendarUIManager = JTCalendar()
         self.calendarModel = Calendar()
+        self.calendarModel.requestCalendarPermissionFromUserAndFetchEvents()
+        self.calendarUIManager = JTCalendar()
         self.googleCalendarModelAdaptor = GoogleCalendarModelAdaptor(model: self.calendarModel)
+        
         super.init(coder: aDecoder)
         
-        self.calendarModel.requestCalendarPermissionFromUserAndFetchEvents()
-        self.calendarUIManager.delegate = self
+        self.googleCalendarModelAdaptor.delegate = self
     }
     
     override func viewDidLoad()
@@ -55,13 +56,20 @@ class CalendarViewController: UIViewController {
         calendarUIManager.menuMonthsView = calendarMenuView
         calendarUIManager.contentView = calendarContentView
         calendarUIManager.dataSource = self
+        calendarUIManager.delegate = self
     }
     
     private func scrollGoogleCalendarToDate(date: NSDate, animated: Bool)
     {
-        let indexPath = googleCalendarModelAdaptor.indexPathForDate(date)
-        tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Middle, animated: animated)
-        tableView.reloadData()
+        googleCalendarModelAdaptor.loadDate(date, block: { (fetchedEvents, error) in
+            
+            if error == nil
+            {
+                let indexPath = self.googleCalendarModelAdaptor.indexPathForDate(date)
+                self.tableView.reloadData()
+                self.tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Middle, animated: animated)
+            }
+        })
     }
     
     // MARK: - bottuns callback
@@ -149,16 +157,36 @@ extension CalendarViewController: JTCalendarDataSource{
     
     func calendarHaveEvent(calendar: JTCalendar!, date: NSDate!) -> Bool
     {
-        let dailyEvents = calendarModel.fetchEventsOnDay(date)
-        if let dailyEvents = dailyEvents where dailyEvents.count > 0
+        if calendarModel.dateRangeIsCached(fromDate: date, toDate: date)
         {
-            return true
+            let dailyEvents = calendarModel.cachedEvents(fromDate: date, toDate: date)
+            if dailyEvents.count > 0
+            {
+                return true
+            }
+            
+            return false
         }
+        
+        //fetch events and then update model and UI
+        calendarModel.fetchEventsOnDay(date, completionBlock: { (fetchedEvents, error) -> () in
+            self.calendarUIManager.reloadData()
+
+            //todo: maybe add calendarUIManager.reloadAppearance()
+        })
         
         return false
     }
     
     func calendarDidDateSelected(calendar: JTCalendar!, date: NSDate!)
+    {
+        scrollGoogleCalendarToDate(date, animated: true)
+    }
+}
+
+extension CalendarViewController: JTCalendarDelegate{
+    
+    func dateHasUpdatedWithDate(date: NSDate!)
     {
         scrollGoogleCalendarToDate(date, animated: true)
     }
@@ -248,14 +276,12 @@ extension CalendarViewController: UITableViewDelegate{
     }
 }
 
-extension CalendarViewController: JTCalendarDelegate{
+extension CalendarViewController: GoogleCalendarModelAdaptorDelegate{
     
-    func dateHasUpdatedWithDate(date: NSDate!)
-    {
-        scrollGoogleCalendarToDate(date, animated: true)
+    func modelHasUpdated() {
+        self.tableView.reloadData()
     }
 }
-
 
 
 

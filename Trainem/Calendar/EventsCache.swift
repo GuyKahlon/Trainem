@@ -15,17 +15,20 @@ import EventKit
 */
 class EventsCache: NSObject {
    
-    //keys: start date without time on day
+    /*
+        keys: start date without time on day
+        cache entries can have several states for date x: 1. no entry x in cache iff event wasn't fetched from calendar
+                                                             and so wasn't cached
+                                                          2. object for key x is an empty events array iff events for date x
+                                                             were fetched but no events on that day on calendar
+                                                          3. object for key x is an array of events that should represent the
+                                                             calendar state
+    */
     static var cache = NSCache()
     let calendar = NSCalendar.currentCalendar()
-    var firstCachedDate: NSDate?
-    var lastCachedDate: NSDate?
     
     var serialCachingOperationQueue: NSOperationQueue
     var reteiveCacheOperationQueue: NSOperationQueue
-    
-    typealias CacheNewEventsBlock = (newCachedEvents: [EKEvent]?, error: NSError?)->()
-    typealias UnCacheEventBlock = (unCachedEvent: EKEvent?, error: NSError?)->()
     
     override init()
     {
@@ -40,47 +43,70 @@ class EventsCache: NSObject {
         super.init()
     }
     
-    //events are cached on day base, so the end date is redundent
-    //completion block is used mainly for testing
-    func cacheNewEvent(event: EKEvent, completionBlock: CacheNewEventsBlock? = nil)
-    {
-        cacheEvents(fromDate: event.startDate, toDate: event.startDate, events: [event], completionBlock: completionBlock)
-    }
-    
     /*
         serialized operation in a background thread
     */
-    func cacheEvents(# fromDate: NSDate, toDate: NSDate, events: [EKEvent], completionBlock: CacheNewEventsBlock? = nil)
+    func cacheEvents(# fromDate: NSDate, toDate: NSDate, events: [EKEvent]?, completionBlock: CacheNewEventsBlock? = nil)
     {
-        //todo: code review - maybe refactor all this class to async methods
-//        serialCachingOperationQueue.addOperationWithBlock { () -> Void in
-        let dateAndEventArray = events.map{ (var event: EKEvent) -> (NSDate, EKEvent) in
-            let eventDate = event.startDate
-            let eventDateWithoutTime = eventDate.dateWithOutTimeOfDay()
-            return (eventDateWithoutTime, event)
-        }
+        initCachedDateRange(fromDate: fromDate, toDate: toDate)
         
-        for dateAndEvent in dateAndEventArray
-        {
-            let (date, event) = dateAndEvent
-            if EventsCache.cache.objectForKey(date) == nil
+        if let events = events{
+            //todo: code review - maybe refactor all this class to async methods
+            //        serialCachingOperationQueue.addOperationWithBlock { () -> Void in
+            let dateAndEventArray = events.map{ (var event: EKEvent) -> (NSDate, EKEvent) in
+                let eventDate = event.startDate
+                let eventDateWithoutTime = eventDate.dateWithOutTimeOfDay()
+                return (eventDateWithoutTime, event)
+            }
+            
+            for dateAndEvent in dateAndEventArray
             {
+                let (date, event) = dateAndEvent
+                if EventsCache.cache.objectForKey(date) == nil
+                {
+                    EventsCache.cache.setObject(Set<EKEvent>(), forKey: date)
+                }
+                
+                if var events = EventsCache.cache.objectForKey(date) as? Set<EKEvent>
+                {
+                    events.insert(event)
+                    EventsCache.cache.setObject(events, forKey: date)
+                }
+            }
+            
+            if let completionBlock = completionBlock
+            {
+                completionBlock(newCachedEvents: Set(events), error: nil)
+            }
+        }
+    }
+    
+    //go over uninitalized date entries in cache and init them
+    func initCachedDateRange(# fromDate: NSDate, toDate: NSDate)
+    {
+        let fromDateWithoutTime = fromDate.dateWithOutTimeOfDay()
+        let previousDateWithoutTime = fromDateWithoutTime.previousDayWithSameTime()
+        let toDate = toDate.dateWithOutTimeOfDay()
+        
+        var components = calendar.components(.CalendarUnitHour, fromDate: previousDateWithoutTime)
+        
+        calendar.enumerateDatesStartingAfterDate(previousDateWithoutTime, matchingComponents: components, options: .MatchStrictly, usingBlock: { (date: NSDate!, exactMatch: Bool, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+            
+            if date.isGreaterThanDate(toDate)
+            {
+                stop.memory = true
+                return
+            }
+            
+            if let cachedEventsForDate = EventsCache.cache.objectForKey(date) as? Set<EKEvent>
+            {
+                return
+            }
+            else
+            {//initialize cache entry
                 EventsCache.cache.setObject(Set<EKEvent>(), forKey: date)
             }
-            
-            if var events = EventsCache.cache.objectForKey(date) as? Set<EKEvent>
-            {
-                events.insert(event)
-                EventsCache.cache.setObject(events, forKey: date)
-            }
-            
-            self.updateFirstAndLastCachedDates(startDate: fromDate, endDate: toDate)
-        }
-        
-        if let completionBlock = completionBlock
-        {
-            completionBlock(newCachedEvents: events, error: nil)
-        }
+        })
     }
     
     //events are cached on day base, so the end date is redundent
@@ -103,37 +129,13 @@ class EventsCache: NSObject {
         }
     }
     
-    //update the cached range if and only if the new range is overlapping or containing current cached date range
-    func updateFirstAndLastCachedDates(# startDate: NSDate, endDate: NSDate)
-    {
-        if firstCachedDate == nil
-        {
-            firstCachedDate = startDate
-        }
-        
-        if lastCachedDate == nil
-        {
-            lastCachedDate = endDate
-        }
-        //the 2 hour comparison is for 2 reasons: day light savings causes a 1 hour gap, endDate is on 23:59 and start date is on 00:00
-        if startDate.isLessThanDate(firstCachedDate!) && !endDate.isLessThanDate(firstCachedDate!)
-        {
-            firstCachedDate = startDate
-        }
-        
-        if endDate.isGreaterThanDate(lastCachedDate!) && !startDate.isGreaterThanDate(lastCachedDate!)
-        {
-            lastCachedDate = endDate
-        }
-    }
-    
-    
+    //cached events return events on the same day as required date
     func cachedEvents(# fromDate: NSDate, toDate: NSDate)->Set<EKEvent>
     {
-        let toDate = toDate.dateWithOutTimeOfDay()
         var cachedEvents = Set<EKEvent>()
         let fromDateWithoutTime = fromDate.dateWithOutTimeOfDay()
         let previousDateWithoutTime = fromDateWithoutTime.previousDayWithSameTime()
+        let toDate = toDate.dateWithOutTimeOfDay()
      
         var components = calendar.components(.CalendarUnitHour, fromDate: previousDateWithoutTime)
         
@@ -156,12 +158,46 @@ class EventsCache: NSObject {
     
     func dateRangeIsCached(# fromDate: NSDate, toDate: NSDate)->Bool
     {
-        let fromDay = fromDate.dateWithOutTimeOfDay()
-        let toDay = toDate.dateWithOutTimeOfDay()
-        
-        if let first = firstCachedDate, last = lastCachedDate
+        if fromDate == toDate
         {
-            return !last.isLessThanDate(fromDate) && !first.isGreaterThanDate(toDate)
+            return dateIsCached(fromDate)
+        }
+        
+        let fromDateWithoutTime = fromDate.dateWithOutTimeOfDay()
+        let previousDateWithoutTime = fromDateWithoutTime.previousDayWithSameTime()
+        let toDate = toDate.dateWithOutTimeOfDay()
+        
+        var dateRangeIsCached = true
+        
+        var components = calendar.components(.CalendarUnitHour, fromDate: previousDateWithoutTime)
+        
+        calendar.enumerateDatesStartingAfterDate(previousDateWithoutTime, matchingComponents: components, options: .MatchStrictly, usingBlock: { (date: NSDate!, exactMatch: Bool, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+            
+            if date.isGreaterThanDate(toDate)
+            {
+                stop.memory = true
+                return
+            }
+            
+            let dayIsCached = self.dateIsCached(date)
+            
+            if !dayIsCached
+            {
+                dateRangeIsCached = false
+                stop.memory = true
+                return
+            }
+        })
+        
+        return dateRangeIsCached
+    }
+    
+    // a date is cached iff its entry in the cache is not nil; e.g. if object for key date in cache is an emptry array it is cached but there are no events on that day
+    func dateIsCached(date: NSDate) -> Bool
+    {
+        if let cachedEventsForDate = EventsCache.cache.objectForKey(date) as? Set<EKEvent>
+        {
+            return true
         }
         
         return false
@@ -170,6 +206,5 @@ class EventsCache: NSObject {
     func cleanEventsCache()
     {
         EventsCache.cache.removeAllObjects()
-//        EventsCache.cache = NSCache()
     }
 }

@@ -9,14 +9,17 @@
 import UIKit
 import EventKit
 
+typealias SaveNewEventBlock = (savedEvent: EKEvent?, error: NSError?)->()
+typealias RemoveEventBlock = (removedEvent: EKEvent?, error: NSError?)->()
+typealias CacheNewEventsBlock = (newCachedEvents: Set<EKEvent>?, error: NSError?)->()
+typealias UnCacheEventBlock = (unCachedEvent: EKEvent?, error: NSError?)->()
+typealias FetchEventsBlock = (fetchedEvents: Set<EKEvent>?, error: NSError?)->()
+typealias DateRangeEnumerationOperator = (fetchedEvents: Set<EKEvent>?, error: NSError?)->()
+
 class Calendar: NSObject {//todo: move work to background threads
     
     let eventsCache = EventsCache()
     static var defaultCalendar = NSCalendar.currentCalendar()
-    typealias SaveNewEventBlock = (savedEvent: EKEvent?, error: NSError?)->()
-    typealias RemoveEventBlock = (removedEvent: EKEvent?, error: NSError?)->()
-    typealias CacheNewEventsBlock = (newCachedEvents: [EKEvent]?, error: NSError?)->()
-    typealias UnCacheEventBlock = (unCachedEvent: EKEvent?, error: NSError?)->()
     
     func requestCalendarPermissionFromUserAndFetchEvents()
     {
@@ -35,26 +38,23 @@ class Calendar: NSObject {//todo: move work to background threads
         })
     }
     
-    func fetchCurrentMonthEvents()->Set<EKEvent>?
+    func fetchCurrentMonthEvents(completionBlock: FetchEventsBlock)
     {
         let date = NSDate()
         
         if let startOfMonthDate = date.startOfMonth(), endOfMonthDate = date.endOfMonth()
         {
-            return fetchEvents(fromDate: startOfMonthDate, toDate: endOfMonthDate)
+            fetchEvents(fromDate: startOfMonthDate, toDate: endOfMonthDate, completionBlock: completionBlock)
         }
-        
-        return nil
     }
     
     /* 
         :argument: date
         :return: Calendar events from the same day as date without consideration of time on day
     */
-    func fetchEventsOnDay(date: NSDate)->Set<EKEvent>?
+    func fetchEventsOnDay(date: NSDate, completionBlock: FetchEventsBlock)
     {
-        let dailyEvents = fetchEvents(fromDate: date.dateWithBeginningOfDay(), toDate: date.dateWithEndOfDay())
-        return dailyEvents
+        fetchEvents(fromDate: date.dateWithBeginningOfDay(), toDate: date.dateWithEndOfDay(), completionBlock: completionBlock)
     }
     
     /*
@@ -62,11 +62,12 @@ class Calendar: NSObject {//todo: move work to background threads
         All fetching methods should go through this method.
         Fetching is done in month unit batches
     */
-    func fetchEvents(# fromDate: NSDate, toDate: NSDate)->Set<EKEvent>?
+    func fetchEvents(# fromDate: NSDate, toDate: NSDate, completionBlock: FetchEventsBlock)
     {
-        if eventsCache.dateRangeIsCached(fromDate: fromDate, toDate: toDate)
+        if dateRangeIsCached(fromDate: fromDate, toDate: toDate)
         {
-            return eventsCache.cachedEvents(fromDate: fromDate, toDate: toDate)
+            let cachedEvents = self.cachedEvents(fromDate: fromDate, toDate: toDate)
+            completionBlock(fetchedEvents: cachedEvents, error: nil)
         }
         
         let fetchAndCacheStartDate = fromDate.startOfMonth()
@@ -74,27 +75,20 @@ class Calendar: NSObject {//todo: move work to background threads
         var predicate = EventKitManager.eventStore.predicateForEventsWithStartDate(fetchAndCacheStartDate, endDate: fetchAndCacheToDate, calendars: nil)
         //todo: it's a synchronized method!
         var events = EventKitManager.eventStore.eventsMatchingPredicate(predicate) //event array is not necessarily ordered
-        
-        if let fetchedEvents = events  as? [EKEvent] where fetchedEvents.count > 0
-        {
-            //todo: consider replacing forced unwrapping
-            cacheEvents(fromDate: fetchAndCacheStartDate!, toDate: fetchAndCacheToDate!, events: fetchedEvents)
-            return eventsCache.cachedEvents(fromDate: fromDate, toDate: toDate)
+        if let events = events as? [EKEvent]{
+            cacheEvents(fromDate: fetchAndCacheStartDate!, toDate: fetchAndCacheToDate!, events: events, completionBlock: completionBlock)
         }
-        
-        //required in case there are no events on those dates. we still want to update the cache range to prevent unneeded work
-        eventsCache.updateFirstAndLastCachedDates(startDate: fetchAndCacheStartDate!, endDate: fetchAndCacheToDate!)
-        return nil
+        cacheEvents(fromDate: fetchAndCacheStartDate!, toDate: fetchAndCacheToDate!, events: nil, completionBlock: completionBlock)
     }
     
-    func cacheNewEvent(event: EKEvent, completionBlock: CacheNewEventsBlock?)
+    func cacheNewEvent(event: EKEvent, completionBlock: CacheNewEventsBlock? = nil)
     {
-        eventsCache.cacheNewEvent(event, completionBlock: completionBlock)
+        cacheEvents(fromDate: event.startDate, toDate: event.startDate, events: [event], completionBlock: completionBlock)
     }
     
-    func cacheEvents(# fromDate: NSDate, toDate: NSDate, events: [EKEvent])
+    func cacheEvents(# fromDate: NSDate, toDate: NSDate, events: [EKEvent]?, completionBlock: CacheNewEventsBlock? = nil)
     {
-        eventsCache.cacheEvents(fromDate: fromDate, toDate: toDate, events: events)
+        eventsCache.cacheEvents(fromDate: fromDate, toDate: toDate, events: events, completionBlock: completionBlock)
     }
     
     func cachedEvents(# fromDate: NSDate, toDate: NSDate)->Set<EKEvent>
@@ -119,7 +113,7 @@ class Calendar: NSObject {//todo: move work to background threads
         
         if eventSaved
         {
-            self.eventsCache.cacheNewEvent(event)
+            cacheNewEvent(event)
             
             if let completionBlock = completionBlock
             {
@@ -170,5 +164,10 @@ class Calendar: NSObject {//todo: move work to background threads
     func cleanEventsCache()
     {
         eventsCache.cleanEventsCache()
+    }
+    
+    func dateRangeIsCached(# fromDate: NSDate, toDate: NSDate)->Bool
+    {
+        return eventsCache.dateRangeIsCached(fromDate: fromDate, toDate: toDate);
     }
 }
