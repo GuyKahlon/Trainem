@@ -263,6 +263,7 @@ extension CalendarViewController: UITableViewDelegate{
                 let middleIndexPath = googleCalendarModelAdaptor.middleIndexPath(visibleIndexPaths)
                 let middleEvent = googleCalendarModelAdaptor.eventForIndexPath(middleIndexPath)
                 calendarUIShowDate(middleEvent.startDate)
+                googleCalendarModelAdaptor.reloadDataForIndexPaths(visibleIndexPaths.first!, lastVisibleIndexPath: visibleIndexPaths.last!)
             }
         }
     }
