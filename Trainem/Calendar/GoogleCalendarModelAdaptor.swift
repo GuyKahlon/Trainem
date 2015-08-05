@@ -130,7 +130,7 @@ class GoogleCalendarModelAdaptor {
         }
     }
     
-    //checks if visible index paths are getting near the ends of loaded events on model and if so, loads next/past events
+    //checks if visible index paths are getting near the ends of loaded events on model and if so, loads next/past events; fetches next month's events as indicated by the model and not the UI, i.e. the UI doesn't have to present a few month's events for there are no events on those dates
     func reloadDataForIndexPathsAtTop(firstVisibleIndexPath: NSIndexPath, lastVisibleIndexPath: NSIndexPath)
     {
         if firstVisibleIndexPath.section == 0 && firstVisibleIndexPath.row < 10
@@ -143,6 +143,7 @@ class GoogleCalendarModelAdaptor {
         }
     }
     
+    //checks if visible index paths are getting near the ends of loaded events on model and if so, loads next/past events; fetches next month's events as indicated by the model and not the UI, i.e. the UI doesn't have to present a few month's events for there are no events on those dates
     private func fetchNextMonthEvents(toDate: NSDate)
     {
         let currentDateComponents = Calendar.defaultCalendar.components(.CalendarUnitYear | .CalendarUnitMonth, fromDate: toDate)
@@ -288,14 +289,13 @@ class GoogleCalendarModelAdaptor {
         let monthSection = findNearestMonthIndexToDate(date, inMonths: Array(self.eventsModel.keys))!
         var eventRow: Int
         
-        if let monthEvents = eventsModel[keyForDate]
+        if let monthEvents = eventsModel[keyForDate] where monthEvents.count > 0
         {
             eventRow = findNearestEventIndexToDate(date, inEvents: monthEvents)!
         }
         else
         {
-            let monthDate = monthDateForSection(monthSection)
-            eventRow = eventsModel[monthDate]!.count - 1
+            eventRow = 0
         }
         
         return NSIndexPath(forRow: eventRow, inSection: monthSection)
@@ -329,6 +329,11 @@ class GoogleCalendarModelAdaptor {
     
     private func findNearestEventIndexToDate(date: NSDate, inEvents events: [EKEvent]) -> Int?
     {
+        if events.count == 0
+        {
+            return nil
+        }
+        
         let eventStartDates = events.map{ $0.startDate }
         
         for index in 0...(count(eventStartDates) - 1)
