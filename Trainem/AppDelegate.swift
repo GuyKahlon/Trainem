@@ -18,14 +18,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
         Parse.setApplicationId("4kTlNHO3adnkxa3h3lZ9OaitDvcJY3mgvRU3isDq",clientKey: "2bPYjJrDvCXPTwpx5jJCx8AnEL48lam2dMr4oQrf")
         
-        let isLoggedIn = PFUser.currentUser()?.username != nil ? true : false
-        if  isLoggedIn == false{
-            let loginStoryboard = UIStoryboard(name: "Login", bundle: NSBundle.mainBundle())
-            if let loginViewControlle = loginStoryboard.instantiateInitialViewController(){
-                window?.rootViewController = loginViewControlle
-                window?.makeKeyAndVisible()
-            }            
-        }
+//        let isLoggedIn = PFUser.currentUser()?.username != nil ? true : false
+//        if  isLoggedIn == false{
+//            let loginStoryboard = UIStoryboard(name: "Login", bundle: NSBundle.mainBundle())
+//            if let loginViewControlle = loginStoryboard.instantiateInitialViewController(){
+//                window?.rootViewController = loginViewControlle
+//                window?.makeKeyAndVisible()
+//            }            
+//        }
         return true
     }
 

@@ -74,7 +74,7 @@ class RegistrationViewController: UIViewController{
             return UIColor.clearColor()
         }.subscribeNextAs { (color:UIColor) -> Void in
             //self.passwordTextField.backgroundColor = color
-            self.passwordTextField.setGlowToView(color)
+            //self.passwordTextField.setGlowToView(color)
         }
 
         //Username & Password
@@ -154,7 +154,7 @@ class RegistrationViewController: UIViewController{
     }
     
     private func isValidEmail(email: String)->Bool{
-        return email.isEmail()
+        return true//email.isEmail()
     }
     
     private func isValidPassword(password: String)->Bool{
@@ -177,13 +177,13 @@ class RegistrationViewController: UIViewController{
     private func gotoMainStoryboard(){
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
         
-        if let mainViewControlle = mainStoryboard.instantiateInitialViewController(){
-            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-            dispatch_async(dispatch_get_main_queue(),{                appDelegate.window?.rootViewController?.presentViewController(mainViewControlle, animated: true){
-                    activityIndicator.stopAnimating()
-                }
-            });
-        }
+//        if let mainViewControlle = mainStoryboard.instantiateInitialViewController(){
+//            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+//            dispatch_async(dispatch_get_main_queue(),{                appDelegate.window?.rootViewController?.presentViewController(mainViewControlle, animated: true){
+//                    activityIndicator.stopAnimating()
+//                }
+//            });
+//        }
     }
 }
 
