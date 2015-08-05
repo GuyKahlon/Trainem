@@ -67,8 +67,6 @@ class CalendarViewController: UIViewController {
             {
                 let indexPath = self.googleCalendarModelAdaptor.indexPathForDate(date)
                 self.tableView.reloadData()
-//                self.tableView.layoutIfNeeded()
-                self.printAllIndexPaths(self.tableView)
                 self.tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Middle, animated: animated)
             }
         })

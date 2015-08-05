@@ -306,7 +306,7 @@ class GoogleCalendarModelAdaptor {
     private func nearestIndexPathForDate(date: NSDate) -> NSIndexPath
     {
         let keyForDate = eventsModelKeyForDate(date)
-        let monthSection = findNearestMonthIndexToDate(date, inMonths: Array(self.eventsModel.keys))!
+        let monthSection = findNearestMonthIndexToDate(date, inMonths: Array(self.filterredEventsModel.keys))!
         var eventRow: Int
         
         if let monthEvents = eventsModel[keyForDate] where monthEvents.count > 0
@@ -321,12 +321,10 @@ class GoogleCalendarModelAdaptor {
         return NSIndexPath(forRow: eventRow, inSection: monthSection)
     }
     
-    //months with no events aren't presented and so aren't counted in index path order
+    //months with no events aren't presented and so aren't counted in index path order; argument months are filtered ones (ones with events)
     private func findNearestMonthIndexToDate(date: NSDate, inMonths months: [NSDate]) -> Int?
     {
-        let filteredMonths = Array(filterredEventsModel.keys)
-        
-        let sortedMonths = filteredMonths.sorted({ $0 < $1 })
+        let sortedMonths = months.sorted({ $0 < $1 })
         let dateMonthRepresentation = eventsModelKeyForDate(date)
         
         for index in 0...(count(sortedMonths) - 1)
