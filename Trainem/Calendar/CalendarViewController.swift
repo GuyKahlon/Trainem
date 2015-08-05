@@ -294,7 +294,6 @@ extension CalendarViewController: UITableViewDelegate{
         self.calendarUIManager.currentDateSelected = date
         self.calendarUIManager.currentDate = date
         self.calendarUIManager.reloadData()
-        self.calendarUIManager.reloadAppearance()
     }
 }
 
