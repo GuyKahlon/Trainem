@@ -9,8 +9,13 @@
 import UIKit
 import EventKitUI
 
+
+
 class CalendarViewController: UIViewController {
 
+    var kJTCalendarDaySelected = "kJTCalendarDaySelected"
+    var kJTCalendarScrolled = "kJTCalendarScrolled"
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var calendarMenuView: JTCalendarMenuView!
     @IBOutlet weak var calendarContentView: JTCalendarContentView!
@@ -33,6 +38,25 @@ class CalendarViewController: UIViewController {
         super.init(coder: aDecoder)
         
         self.googleCalendarModelAdaptor.delegate = self
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "dateWasSelected:", name: kJTCalendarDaySelected, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "UICalendarScrolled:", name: kJTCalendarScrolled, object: nil)
+    }
+    
+    @objc func dateWasSelected(notification: NSNotification)
+    {
+        if let selectedDate = notification.object as? NSDate
+        {
+            scrollGoogleCalendarToDate(selectedDate, animated: true)
+        }
+    }
+    
+    @objc func UICalendarScrolled(notification: NSNotification)
+    {
+        if let selectedDate = notification.object as? NSDate
+        {
+            scrollGoogleCalendarToDate(selectedDate, animated: true)
+        }
     }
     
     override func viewDidLoad()
@@ -201,7 +225,7 @@ extension CalendarViewController: JTCalendarDelegate{
     
     func dateHasUpdatedWithDate(date: NSDate!)
     {
-        scrollGoogleCalendarToDate(date, animated: true)
+//        scrollGoogleCalendarToDate(date, animated: true)
     }
 }
 
