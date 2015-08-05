@@ -67,9 +67,23 @@ class CalendarViewController: UIViewController {
             {
                 let indexPath = self.googleCalendarModelAdaptor.indexPathForDate(date)
                 self.tableView.reloadData()
+//                self.tableView.layoutIfNeeded()
+                self.printAllIndexPaths(self.tableView)
                 self.tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Middle, animated: animated)
             }
         })
+    }
+    
+    private func printAllIndexPaths(tableView: UITableView)
+    {
+        let numberOfSections = tableView.numberOfSections()
+        for section in 0..<numberOfSections
+        {
+            var numberOfRows = tableView.numberOfRowsInSection(section)
+            print("section \(section) has \(numberOfRows) rows ####")
+        }
+        
+        println("")
     }
     
     // MARK: - bottuns callback
@@ -237,7 +251,7 @@ extension CalendarViewController: UITableViewDataSource{
     
     //each month is a section
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return googleCalendarModelAdaptor.numberOfMonths()
+        return googleCalendarModelAdaptor.numberOfMonthsWithEventsOnThem()
     }
 }
 

@@ -120,13 +120,11 @@ class GoogleCalendarModelAdaptor {
     {
         let lastIndexPath = lastIndexPathForModel()
         
-        if lastVisibleIndexPath.section == lastIndexPath.section && lastVisibleIndexPath.row > lastIndexPath.row - 10
+        if lastVisibleIndexPath.section <= lastIndexPath.section && lastVisibleIndexPath.row > lastIndexPath.row - 10
         {
             let keys = [NSDate](eventsModel.keys)
             let sortedKeys = keys.sorted({ $0 < $1})
-            let lastMonthEvents = eventsModel[sortedKeys.last!]
-            let lastEvent = (lastMonthEvents?.last)!
-            fetchNextMonthEvents(lastEvent.startDate)
+            fetchNextMonthEvents(sortedKeys.last!)
         }
     }
     
@@ -137,9 +135,7 @@ class GoogleCalendarModelAdaptor {
         {//getting near the top of events in model
             let keys = [NSDate](eventsModel.keys)
             let sortedKeys = keys.sorted({ $0 < $1})
-            let firstMonthEvents = eventsModel[sortedKeys.first!]
-            let firstEvent = (firstMonthEvents?.first)!
-            fetchPriorMonthEvents(firstEvent.startDate)
+            fetchPriorMonthEvents(sortedKeys.first!)
         }
     }
     
@@ -198,9 +194,20 @@ class GoogleCalendarModelAdaptor {
         return [EKEvent]()
     }
     
-    func numberOfMonths() -> Int
+    func numberOfMonthsWithEventsOnThem() -> Int
     {
-        return count(eventsModel.keys)
+        let allMonths = Array(eventsModel.keys)
+        let filteredMonths = allMonths.filter(
+            {
+                if let eventOnMonth = self.eventsModel[$0] where eventOnMonth.count > 0
+                {
+                    return true
+                }
+                
+                return false
+        })
+        
+        return filteredMonths.count
     }
     
     func numberOfActiveDaysInSection(section: Int) -> Int
@@ -301,9 +308,19 @@ class GoogleCalendarModelAdaptor {
         return NSIndexPath(forRow: eventRow, inSection: monthSection)
     }
     
+    //months with no events aren't presented and so aren't counted in index path order
     private func findNearestMonthIndexToDate(date: NSDate, inMonths months: [NSDate]) -> Int?
     {
-        let sortedMonths = months.sorted({ $0 < $1 })
+        let filteredMonths = months.filter({
+            if let eventOnMonth = self.eventsModel[$0] where eventOnMonth.count > 0
+            {
+                return true
+            }
+            
+            return false
+        })
+        
+        let sortedMonths = filteredMonths.sorted({ $0 < $1 })
         let dateMonthRepresentation = eventsModelKeyForDate(date)
         
         for index in 0...(count(sortedMonths) - 1)
