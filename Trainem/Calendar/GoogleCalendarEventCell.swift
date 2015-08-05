@@ -11,6 +11,7 @@ import EventKit
 
 class GoogleCalendarEventCell: UITableViewCell {
 
+    var event: EKEvent?
     @IBOutlet weak var eventTitleLabel: UILabel!
     @IBOutlet weak var eventTimeLabel: UILabel!
     @IBOutlet weak var dayInMonthLabel: UILabel!
@@ -36,10 +37,13 @@ class GoogleCalendarEventCell: UITableViewCell {
         
         dayInWeekLabel.hidden = true
         dayInMonthLabel.hidden = true
+        
+        self.event = nil
     }
     
     func updateEventDetails(event: EKEvent, hideDate: Bool)
     {
+        self.event = event
         eventTitleLabel.text = event.title
         eventTimeLabel.text = event.startDate.description
         

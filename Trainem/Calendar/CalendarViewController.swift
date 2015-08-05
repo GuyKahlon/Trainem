@@ -20,6 +20,10 @@ class CalendarViewController: UIViewController {
     var calendarModel: Calendar
     var googleCalendarModelAdaptor: GoogleCalendarModelAdaptor
     
+    //this property is intended for keeping tableview's position after reload data;
+    //need to nulify it after using it
+    var lastTableViewVisibleDate: NSDate?
+    
     // MARK: - life cycle
     
     required init(coder aDecoder: NSCoder)
@@ -45,6 +49,16 @@ class CalendarViewController: UIViewController {
     override func viewDidAppear(animated: Bool)
     {
         calendarUIManager.reloadData()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if let lastTableViewVisibleDate = lastTableViewVisibleDate
+        {
+            scrollGoogleCalendarToDate(lastTableViewVisibleDate, animated: false)
+            self.lastTableViewVisibleDate = nil
+        }
     }
     
     func setUpCalendarUI()
@@ -256,6 +270,7 @@ extension CalendarViewController: UITableViewDelegate{
     
     private func updateGoogleCalendarUI(scrollView: UIScrollView)
     {
+        
         if let table = scrollView as? UITableView
         {
             if let visibleIndexPaths = table.indexPathsForVisibleRows() as? [NSIndexPath]
@@ -279,7 +294,14 @@ extension CalendarViewController: UITableViewDelegate{
 
 extension CalendarViewController: GoogleCalendarModelAdaptorDelegate{
     
+    //todo: find a better way to do it
     func modelHasUpdated() {
+        if let visibleCells = self.tableView.visibleCells() as? [GoogleCalendarEventCell]
+        {
+            
+            self.lastTableViewVisibleDate = visibleCells[visibleCells.count/2].event?.startDate
+        }
+        
         self.tableView.reloadData()
     }
 }

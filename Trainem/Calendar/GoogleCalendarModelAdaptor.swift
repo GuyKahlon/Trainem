@@ -62,6 +62,19 @@ class GoogleCalendarModelAdaptor {
         }
     }
     
+    //if events are nil or no events, creates an empty entry in the model for consistency
+    func constructModelFromEvents(events: Set<EKEvent>?, atDate: NSDate) -> [NSDate : [EKEvent]]
+    {
+        if let events = events where events.count > 0
+        {
+            return constructModelFromEvents(events)
+        }
+        
+        let atDateKey = eventsModelKeyForDate(atDate)
+        var model = [atDateKey : [EKEvent]()]
+        return model
+    }
+    
     //changes the data structure to one that is appropriate to serve as class model
     func constructModelFromEvents(events: Set<EKEvent>) -> [NSDate : [EKEvent]]
     {
@@ -128,12 +141,27 @@ class GoogleCalendarModelAdaptor {
     
     private func fetchNextMonthEvents(toDate: NSDate)
     {
-        
+        let currentDateComponents = Calendar.defaultCalendar.components(.CalendarUnitYear | .CalendarUnitMonth, fromDate: toDate)
+        currentDateComponents.month += 1
+        let dateInNextMonth = Calendar.defaultCalendar.dateFromComponents(currentDateComponents)!
+        monthlyEventsForDate(dateInNextMonth, completionBlock: { (fetchedEvents, error) -> () in
+            let fetchedEventsModel = self.constructModelFromEvents(fetchedEvents, atDate: dateInNextMonth)
+            self.updateEventsModelWithEvents(fetchedEventsModel)
+            self.delegate?.modelHasUpdated()
+        })
     }
     
     private func fetchPriorMonthEvents(toDate: NSDate)
     {
-        
+        let currentDateComponents = Calendar.defaultCalendar.components(.CalendarUnitYear | .CalendarUnitMonth, fromDate: toDate)
+        currentDateComponents.month -= 1
+        let dateInPreviousMonth = Calendar.defaultCalendar.dateFromComponents(currentDateComponents)!
+        monthlyEventsForDate(dateInPreviousMonth, completionBlock: { (fetchedEvents, error) -> () in
+            
+            let fetchedEventsModel = self.constructModelFromEvents(fetchedEvents, atDate: dateInPreviousMonth)
+            self.updateEventsModelWithEvents(fetchedEventsModel)
+            self.delegate?.modelHasUpdated()
+        })
     }
     
     private func lastIndexPathForModel() -> NSIndexPath
