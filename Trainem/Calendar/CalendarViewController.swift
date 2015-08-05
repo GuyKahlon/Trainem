@@ -20,10 +20,6 @@ class CalendarViewController: UIViewController {
     var calendarModel: Calendar
     var googleCalendarModelAdaptor: GoogleCalendarModelAdaptor
     
-    //this property is intended for keeping tableview's position after reload data;
-    //need to nulify it after using it
-    var lastTableViewVisibleDate: NSDate?
-    
     // MARK: - life cycle
     
     required init(coder aDecoder: NSCoder)
@@ -49,16 +45,6 @@ class CalendarViewController: UIViewController {
     override func viewDidAppear(animated: Bool)
     {
         calendarUIManager.reloadData()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        if let lastTableViewVisibleDate = lastTableViewVisibleDate
-        {
-            scrollGoogleCalendarToDate(lastTableViewVisibleDate, animated: false)
-            self.lastTableViewVisibleDate = nil
-        }
     }
     
     func setUpCalendarUI()
@@ -258,10 +244,10 @@ extension CalendarViewController: UITableViewDataSource{
 extension CalendarViewController: UITableViewDelegate{
     
     //todo: maybe needs to make it more efficient because it gets a little stuck when dragging between months
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView)
-    {
-        updateGoogleCalendarUI(scrollView)
-    }
+//    func scrollViewDidEndDecelerating(scrollView: UIScrollView)
+//    {
+//        updateGoogleCalendarUI(scrollView)
+//    }
     
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool)
     {
@@ -270,7 +256,6 @@ extension CalendarViewController: UITableViewDelegate{
     
     private func updateGoogleCalendarUI(scrollView: UIScrollView)
     {
-        
         if let table = scrollView as? UITableView
         {
             if let visibleIndexPaths = table.indexPathsForVisibleRows() as? [NSIndexPath]
@@ -278,7 +263,16 @@ extension CalendarViewController: UITableViewDelegate{
                 let middleIndexPath = googleCalendarModelAdaptor.middleIndexPath(visibleIndexPaths)
                 let middleEvent = googleCalendarModelAdaptor.eventForIndexPath(middleIndexPath)
                 calendarUIShowDate(middleEvent.startDate)
-                googleCalendarModelAdaptor.reloadDataForIndexPaths(visibleIndexPaths.first!, lastVisibleIndexPath: visibleIndexPaths.last!)
+                
+                if (scrollView.contentOffset.y <= 0)
+                {//scrollView is at the top
+                    googleCalendarModelAdaptor.reloadDataForIndexPathsAtTop(visibleIndexPaths.first!, lastVisibleIndexPath: visibleIndexPaths.last!)
+                }
+                else
+                {
+                    googleCalendarModelAdaptor.reloadDataForIndexPathsAtBottom(visibleIndexPaths.first!, lastVisibleIndexPath: visibleIndexPaths.last!)
+                }
+                
             }
         }
     }
@@ -299,10 +293,12 @@ extension CalendarViewController: GoogleCalendarModelAdaptorDelegate{
         if let visibleCells = self.tableView.visibleCells() as? [GoogleCalendarEventCell]
         {
             
-            self.lastTableViewVisibleDate = visibleCells[visibleCells.count/2].event?.startDate
+            let lastTableViewVisibleDate = visibleCells[visibleCells.count/2].event?.startDate
+            self.tableView.reloadData()
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.scrollGoogleCalendarToDate(lastTableViewVisibleDate!, animated: false)
+            })
         }
-        
-        self.tableView.reloadData()
     }
 }
 

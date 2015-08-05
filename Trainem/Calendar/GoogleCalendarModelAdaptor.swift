@@ -116,17 +116,8 @@ class GoogleCalendarModelAdaptor {
     }
     
     //checks if visible index paths are getting near the ends of loaded events on model and if so, loads next/past events
-    func reloadDataForIndexPaths(firstVisibleIndexPath: NSIndexPath, lastVisibleIndexPath: NSIndexPath)
+    func reloadDataForIndexPathsAtBottom(firstVisibleIndexPath: NSIndexPath, lastVisibleIndexPath: NSIndexPath)
     {
-        if firstVisibleIndexPath.section == 0 && firstVisibleIndexPath.row < 10
-        {//getting near the top of events in model
-            let keys = [NSDate](eventsModel.keys)
-            let sortedKeys = keys.sorted({ $0 < $1})
-            let firstMonthEvents = eventsModel[sortedKeys.first!]
-            let firstEvent = (firstMonthEvents?.first)!
-            fetchPriorMonthEvents(firstEvent.startDate)
-        }
-        
         let lastIndexPath = lastIndexPathForModel()
         
         if lastVisibleIndexPath.section == lastIndexPath.section && lastVisibleIndexPath.row > lastIndexPath.row - 10
@@ -136,6 +127,19 @@ class GoogleCalendarModelAdaptor {
             let lastMonthEvents = eventsModel[sortedKeys.last!]
             let lastEvent = (lastMonthEvents?.last)!
             fetchNextMonthEvents(lastEvent.startDate)
+        }
+    }
+    
+    //checks if visible index paths are getting near the ends of loaded events on model and if so, loads next/past events
+    func reloadDataForIndexPathsAtTop(firstVisibleIndexPath: NSIndexPath, lastVisibleIndexPath: NSIndexPath)
+    {
+        if firstVisibleIndexPath.section == 0 && firstVisibleIndexPath.row < 10
+        {//getting near the top of events in model
+            let keys = [NSDate](eventsModel.keys)
+            let sortedKeys = keys.sorted({ $0 < $1})
+            let firstMonthEvents = eventsModel[sortedKeys.first!]
+            let firstEvent = (firstMonthEvents?.first)!
+            fetchPriorMonthEvents(firstEvent.startDate)
         }
     }
     
