@@ -24,6 +24,28 @@ class GoogleCalendarModelAdaptor {
     
     //events model keys are NSDate that represent a month, and values are all events on that month
     private var eventsModel = [NSDate : [EKEvent]]()
+    private var filterredEventsModel: [NSDate : [EKEvent]]{
+        get{
+            let filteredMonths = Array(eventsModel.keys).filter(
+                {
+                    if let eventOnMonth = self.eventsModel[$0] where eventOnMonth.count > 0
+                    {
+                        return true
+                    }
+                    
+                    return false
+            })
+            
+            var filterredModel = [NSDate : [EKEvent]]()
+            
+            for filteredMonth in filteredMonths
+            {
+                filterredModel[filteredMonth] = eventsModel[filteredMonth]
+            }
+            
+            return filterredModel
+        }
+    }
     
     init(model: Calendar)
     {
@@ -197,23 +219,14 @@ class GoogleCalendarModelAdaptor {
     func numberOfMonthsWithEventsOnThem() -> Int
     {
         let allMonths = Array(eventsModel.keys)
-        let filteredMonths = allMonths.filter(
-            {
-                if let eventOnMonth = self.eventsModel[$0] where eventOnMonth.count > 0
-                {
-                    return true
-                }
-                
-                return false
-        })
         
-        return filteredMonths.count
+        return Array(filterredEventsModel.keys).count
     }
     
     func numberOfActiveDaysInSection(section: Int) -> Int
     {
         let monthDate = monthDateForSection(section)
-        if let eventsOnMonth = eventsModel[monthDate]
+        if let eventsOnMonth = filterredEventsModel[monthDate]
         {
             return count(eventsOnMonth)
         }
@@ -224,14 +237,14 @@ class GoogleCalendarModelAdaptor {
     func eventForIndexPath(indexPath: NSIndexPath) -> EKEvent
     {
         let monthForIndexPath = monthDateForSection(indexPath.section)
-        let eventsForMonth = self.eventsModel[monthForIndexPath]!
+        let eventsForMonth = self.filterredEventsModel[monthForIndexPath]!
         let event = eventsForMonth[indexPath.row]
         return event
     }
     
     private func monthDateForSection(section: Int) -> NSDate
     {
-        return Array(self.eventsModel.keys).sorted({ $0 < $1 })[section]
+        return Array(self.filterredEventsModel.keys).sorted({ $0 < $1 })[section]
     }
     
     func shouldHideDateOnEvent(event: EKEvent, atIndexPath indexPath: NSIndexPath) -> Bool
@@ -311,14 +324,7 @@ class GoogleCalendarModelAdaptor {
     //months with no events aren't presented and so aren't counted in index path order
     private func findNearestMonthIndexToDate(date: NSDate, inMonths months: [NSDate]) -> Int?
     {
-        let filteredMonths = months.filter({
-            if let eventOnMonth = self.eventsModel[$0] where eventOnMonth.count > 0
-            {
-                return true
-            }
-            
-            return false
-        })
+        let filteredMonths = Array(filterredEventsModel.keys)
         
         let sortedMonths = filteredMonths.sorted({ $0 < $1 })
         let dateMonthRepresentation = eventsModelKeyForDate(date)
