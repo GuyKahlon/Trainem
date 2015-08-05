@@ -19,6 +19,7 @@ class CalendarViewController: UIViewController {
     var calendarUIManager: JTCalendar
     var calendarModel: Calendar
     var googleCalendarModelAdaptor: GoogleCalendarModelAdaptor
+    var isUpdatingUI: Bool = false
     
     // MARK: - life cycle
     
@@ -256,15 +257,29 @@ extension CalendarViewController: UITableViewDataSource{
 extension CalendarViewController: UITableViewDelegate{
     
     //todo: maybe needs to make it more efficient because it gets a little stuck when dragging between months
-//    func scrollViewDidEndDecelerating(scrollView: UIScrollView)
-//    {
-//        updateGoogleCalendarUI(scrollView)
-//    }
-    
-    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool)
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView)
     {
-        updateGoogleCalendarUI(scrollView)
+//        if !self.isUpdatingUI
+//        {
+//            self.isUpdatingUI = true
+//            println("updatingUI1")
+            updateGoogleCalendarUI(scrollView)
+//            println("stop updatingUI1")
+//            self.isUpdatingUI = false
+//        }
     }
+    
+//    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool)
+//    {
+//        if !self.isUpdatingUI
+//        {
+//            self.isUpdatingUI = true
+//            println("updatingUI2")
+//            updateGoogleCalendarUI(scrollView)
+//            println("stop updatingUI2")
+//            self.isUpdatingUI = false
+//        }
+//    }
     
     private func updateGoogleCalendarUI(scrollView: UIScrollView)
     {

@@ -237,7 +237,7 @@ class GoogleCalendarModelAdaptor {
     func eventForIndexPath(indexPath: NSIndexPath) -> EKEvent
     {
         let monthForIndexPath = monthDateForSection(indexPath.section)
-        let eventsForMonth = self.filterredEventsModel[monthForIndexPath]!
+        let eventsForMonth = self.eventsModel[monthForIndexPath]!
         let event = eventsForMonth[indexPath.row]
         return event
     }
